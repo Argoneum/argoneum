@@ -4,7 +4,7 @@
 #include "univalue.h"
 #include "utilstrencodings.h"
 
-#include "test/test_dash.h"
+#include "test/test_argoneum.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -42,7 +42,7 @@ std::string CreateEncodedProposalObject(const UniValue& objJSON)
 
     UniValue outerArray(UniValue::VARR);
     outerArray.push_back(innerArray);
-    
+
     std::string strData = outerArray.write();
     std::string strHex = HexStr(strData);
     return strHex;

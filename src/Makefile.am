@@ -49,8 +49,8 @@ EXTRA_LIBRARIES += libbitcoin_zmq.a
 endif
 
 if BUILD_BITCOIN_LIBS
-lib_LTLIBRARIES = libdashconsensus.la
-LIBBITCOIN_CONSENSUS=libdashconsensus.la
+lib_LTLIBRARIES = libargoneumconsensus.la
+LIBBITCOIN_CONSENSUS=libargoneumconsensus.la
 else
 LIBBITCOIN_CONSENSUS=
 endif
@@ -60,15 +60,15 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += dashd
+  bin_PROGRAMS += argoneumd
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += dash-cli dash-tx
+  bin_PROGRAMS += argoneum-cli argoneum-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
-# dash core #
+# argoneum core #
 BITCOIN_CORE_H = \
   addrdb.h \
   activemasternode.h \
@@ -207,7 +207,7 @@ obj/build.h: FORCE
 	  $(abs_top_srcdir)
 libbitcoin_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between dashd and dash-qt
+# server: shared between argoneumd and argoneum-qt
 libbitcoin_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
 libbitcoin_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_server_a_SOURCES = \
@@ -280,7 +280,7 @@ libbitcoin_zmq_a_SOURCES = \
 endif
 
 
-# wallet: shared between dashd and dash-qt, but only linked
+# wallet: shared between argoneumd and argoneum-qt, but only linked
 # when wallet enabled
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
@@ -308,7 +308,6 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/hmac_sha512.cpp \
   crypto/hmac_sha512.h \
   crypto/ripemd160.cpp \
-  crypto/aes_helper.c \
   crypto/ripemd160.h \
   crypto/sha1.cpp \
   crypto/sha1.h \
@@ -317,7 +316,7 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/sha512.cpp \
   crypto/sha512.h
 
-# x11
+# x11, x16r
 crypto_libbitcoin_crypto_a_SOURCES += \
   crypto/blake.c \
   crypto/bmw.c \
@@ -341,9 +340,44 @@ crypto_libbitcoin_crypto_a_SOURCES += \
   crypto/sph_shavite.h \
   crypto/sph_simd.h \
   crypto/sph_skein.h \
-  crypto/sph_types.h
+  crypto/sph_types.h \
+  crypto/sph_hamsi.h \
+  crypto/sph_hamsi.c \
+  crypto/sph_fugue.h \
+  crypto/sph_fugue.c \
+  crypto/sph_shabal.h \
+  crypto/sph_shabal.c \
+  crypto/sph_whirlpool.h \
+  crypto/sph_whirlpool.c \
+  crypto/sph_sha2.h \
+  crypto/sph_sha2.c \
+  crypto/sph_sha512.c
 
-# common: shared between dashd, and dash-qt and non-server tools
+# lyra2z
+crypto_libbitcoin_crypto_a_SOURCES += \
+  crypto/lyra2z/blake.c \
+  crypto/lyra2z/lyra2.c \
+  crypto/lyra2z/lyra2.h \
+  crypto/lyra2z/lyra2z.c \
+  crypto/lyra2z/lyra2z.h \
+  crypto/lyra2z/sponge.c \
+  crypto/lyra2z/sponge.h \
+  crypto/lyra2z/sph_blake.h \
+  crypto/lyra2z/sph_types.h
+
+# skein
+crypto_libbitcoin_crypto_a_SOURCES += \
+  crypto/skein.h \
+  crypto/sha256_y.cpp \
+  crypto/sha256_y.h
+
+# helpers to be #included, not compiled
+EXTRA_DIST = \
+	crypto/aes_helper.c \
+	crypto/md_helper.c \
+	crypto/sph_hamsi_helper.c
+
+# common: shared between argoneumd, and argoneum-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
@@ -403,7 +437,7 @@ if GLIBC_BACK_COMPAT
 libbitcoin_util_a_SOURCES += compat/glibc_compat.cpp
 endif
 
-# cli: shared between dash-cli and dash-qt
+# cli: shared between argoneum-cli and argoneum-qt
 libbitcoin_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_cli_a_SOURCES = \
@@ -414,16 +448,16 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-dashd_SOURCES = dashd.cpp
-dashd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-dashd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-dashd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+argoneumd_SOURCES = argoneumd.cpp
+argoneumd_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+argoneumd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+argoneumd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-dashd_SOURCES += dashd-res.rc
+argoneumd_SOURCES += argoneumd-res.rc
 endif
 
-dashd_LDADD = \
+argoneumd_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
@@ -434,56 +468,56 @@ dashd_LDADD = \
   $(LIBSECP256K1)
 
 if ENABLE_ZMQ
-dashd_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
+argoneumd_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
 
 if ENABLE_WALLET
-dashd_LDADD += libbitcoin_wallet.a
+argoneumd_LDADD += libbitcoin_wallet.a
 endif
 
-dashd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+argoneumd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
 
-# dash-cli binary #
-dash_cli_SOURCES = dash-cli.cpp
-dash_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-dash_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-dash_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# argoneum-cli binary #
+argoneum_cli_SOURCES = argoneum-cli.cpp
+argoneum_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+argoneum_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+argoneum_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-dash_cli_SOURCES += dash-cli-res.rc
+argoneum_cli_SOURCES += argoneum-cli-res.rc
 endif
 
-dash_cli_LDADD = \
+argoneum_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL)
-dash_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+argoneum_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# dash-tx binary #
-dash_tx_SOURCES = dash-tx.cpp
-dash_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-dash_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-dash_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# argoneum-tx binary #
+argoneum_tx_SOURCES = argoneum-tx.cpp
+argoneum_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+argoneum_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+argoneum_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-dash_tx_SOURCES += dash-tx-res.rc
+argoneum_tx_SOURCES += argoneum-tx-res.rc
 endif
 
-dash_tx_LDADD = \
+argoneum_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-dash_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+argoneum_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-# dashconsensus library #
+# argoneumconsensus library #
 if BUILD_BITCOIN_LIBS
-include_HEADERS = script/dashconsensus.h
-libdashconsensus_la_SOURCES = \
+include_HEADERS = script/argoneumconsensus.h
+libargoneumconsensus_la_SOURCES = \
   crypto/hmac_sha512.cpp \
   crypto/ripemd160.cpp \
   crypto/sha1.cpp \
@@ -492,20 +526,20 @@ libdashconsensus_la_SOURCES = \
   hash.cpp \
   primitives/transaction.cpp \
   pubkey.cpp \
-  script/dashconsensus.cpp \
+  script/argoneumconsensus.cpp \
   script/interpreter.cpp \
   script/script.cpp \
   uint256.cpp \
   utilstrencodings.cpp
 
 if GLIBC_BACK_COMPAT
-  libdashconsensus_la_SOURCES += compat/glibc_compat.cpp
+  libargoneumconsensus_la_SOURCES += compat/glibc_compat.cpp
 endif
 
-libdashconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
-libdashconsensus_la_LIBADD = $(LIBSECP256K1)
-libdashconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
-libdashconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libargoneumconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
+libargoneumconsensus_la_LIBADD = $(LIBSECP256K1)
+libargoneumconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL
+libargoneumconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 endif
 #
@@ -526,7 +560,7 @@ CLEANFILES += zmq/*.gcda zmq/*.gcno
 
 DISTCLEANFILES = obj/build.h
 
-EXTRA_DIST = leveldb
+EXTRA_DIST += leveldb
 
 clean-local:
 	-$(MAKE) -C leveldb clean

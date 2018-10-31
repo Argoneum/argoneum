@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Argoneum
+Comment=Argoneum P2P Cryptocurrency
+Comment[fr]=Argoneum, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Argoneum, eşten eşe kriptografik sanal para birimi
+Exec=argoneum-qt %u
+Terminal=false
+Type=Application
+Icon=argoneum128
+MimeType=x-scheme-handler/argoneum;
+Categories=Office;Finance;

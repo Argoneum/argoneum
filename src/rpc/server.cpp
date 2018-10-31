@@ -243,11 +243,11 @@ UniValue stop(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 1)
         throw runtime_error(
             "stop\n"
-            "\nStop Dash Core server.");
+            "\nStop Argoneum Core server.");
     // Event loop will exit after current HTTP requests have been handled, so
     // this reply will get back to the client.
     StartShutdown();
-    return "Dash Core server stopping";
+    return "Argoneum Core server stopping";
 }
 
 /**
@@ -343,20 +343,20 @@ static const CRPCCommand vRPCCommands[] =
     { "hidden",             "resendwallettransactions", &resendwallettransactions, true},
 #endif
 
-    /* Dash features */
-    { "dash",               "masternode",             &masternode,             true  },
-    { "dash",               "masternodelist",         &masternodelist,         true  },
-    { "dash",               "masternodebroadcast",    &masternodebroadcast,    true  },
-    { "dash",               "gobject",                &gobject,                true  },
-    { "dash",               "getgovernanceinfo",      &getgovernanceinfo,      true  },
-    { "dash",               "getsuperblockbudget",    &getsuperblockbudget,    true  },
-    { "dash",               "voteraw",                &voteraw,                true  },
-    { "dash",               "mnsync",                 &mnsync,                 true  },
-    { "dash",               "spork",                  &spork,                  true  },
-    { "dash",               "getpoolinfo",            &getpoolinfo,            true  },
-    { "dash",               "sentinelping",           &sentinelping,           true  },
+    /* Argoneum features */
+    { "argoneum",               "masternode",             &masternode,             true  },
+    { "argoneum",               "masternodelist",         &masternodelist,         true  },
+    { "argoneum",               "masternodebroadcast",    &masternodebroadcast,    true  },
+    { "argoneum",               "gobject",                &gobject,                true  },
+    { "argoneum",               "getgovernanceinfo",      &getgovernanceinfo,      true  },
+    { "argoneum",               "getsuperblockbudget",    &getsuperblockbudget,    true  },
+    { "argoneum",               "voteraw",                &voteraw,                true  },
+    { "argoneum",               "mnsync",                 &mnsync,                 true  },
+    { "argoneum",               "spork",                  &spork,                  true  },
+    { "argoneum",               "getpoolinfo",            &getpoolinfo,            true  },
+    { "argoneum",               "sentinelping",           &sentinelping,           true  },
 #ifdef ENABLE_WALLET
-    { "dash",               "privatesend",            &privatesend,            false },
+    { "argoneum",               "privatesend",            &privatesend,            false },
 
     /* Wallet */
     { "wallet",             "keepass",                &keepass,                true },
@@ -580,13 +580,13 @@ std::vector<std::string> CRPCTable::listCommands() const
 
 std::string HelpExampleCli(const std::string& methodname, const std::string& args)
 {
-    return "> dash-cli " + methodname + " " + args + "\n";
+    return "> argoneum-cli " + methodname + " " + args + "\n";
 }
 
 std::string HelpExampleRpc(const std::string& methodname, const std::string& args)
 {
     return "> curl --user myusername --data-binary '{\"jsonrpc\": \"1.0\", \"id\":\"curltest\", "
-        "\"method\": \"" + methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:9998/\n";
+        "\"method\": \"" + methodname + "\", \"params\": [" + args + "] }' -H 'content-type: text/plain;' http://127.0.0.1:9899/\n";
 }
 
 void RPCRegisterTimerInterface(RPCTimerInterface *iface)

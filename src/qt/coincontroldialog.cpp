@@ -46,7 +46,7 @@ CoinControlDialog::CoinControlDialog(const PlatformStyle *platformStyle, QWidget
     platformStyle(platformStyle)
 {
     ui->setupUi(this);
-    
+
     /* Open CSS when configured */
     this->setStyleSheet(GUIUtil::loadStyleSheet());
 
@@ -625,7 +625,7 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
     }
 
     // actually update labels
-    int nDisplayUnit = BitcoinUnits::DASH;
+    int nDisplayUnit = BitcoinUnits::AGM;
     if (model && model->getOptionsModel())
         nDisplayUnit = model->getOptionsModel()->getDisplayUnit();
 
@@ -672,7 +672,7 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
     else {
         dFeeVary = (double)std::max(CWallet::GetRequiredFee(1000), mempool.estimateSmartFee(nTxConfirmTarget).GetFeePerK()) / 1000;
     }
-    QString toolTip4 = tr("Can vary +/- %1 duff(s) per input.").arg(dFeeVary);
+    QString toolTip4 = tr("Can vary +/- %1 arg(s) per input.").arg(dFeeVary);
 
     l3->setToolTip(toolTip4);
     l4->setToolTip(toolTip4);
@@ -697,7 +697,7 @@ void CoinControlDialog::updateView()
 
     bool treeMode = ui->radioTreeMode->isChecked();
     QString theme = GUIUtil::getThemeName();
-    
+
     ui->treeWidget->clear();
     ui->treeWidget->setEnabled(false); // performance, otherwise updateLabels would be called for every checked checkbox
     ui->treeWidget->setAlternatingRowColors(!treeMode);
@@ -753,7 +753,7 @@ void CoinControlDialog::updateView()
             {
                 sAddress = QString::fromStdString(CBitcoinAddress(outputAddress).ToString());
 
-                // if listMode or change => show dash address. In tree mode, address is not shown again for direct wallet address outputs
+                // if listMode or change => show argoneum address. In tree mode, address is not shown again for direct wallet address outputs
                 if (!treeMode || (!(sAddress == sWalletAddress)))
                     itemOutput->setText(COLUMN_ADDRESS, sAddress);
 

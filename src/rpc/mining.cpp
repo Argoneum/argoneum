@@ -288,8 +288,8 @@ UniValue prioritisetransaction(const UniValue& params, bool fHelp)
             "1. \"txid\"       (string, required) The transaction id.\n"
             "2. priority delta (numeric, required) The priority to add or subtract.\n"
             "                  The transaction selection algorithm considers the tx as it would have a higher priority.\n"
-            "                  (priority of a transaction is calculated: coinage * value_in_duffs / txsize) \n"
-            "3. fee delta      (numeric, required) The fee value (in duffs) to add (or subtract, if negative).\n"
+            "                  (priority of a transaction is calculated: coinage * value_in_args / txsize) \n"
+            "3. fee delta      (numeric, required) The fee value (in args) to add (or subtract, if negative).\n"
             "                  The fee is not actually paid, only the algorithm for selecting transactions into a block\n"
             "                  considers the transaction as it would have paid a higher (or lower) fee.\n"
             "\nResult\n"
@@ -377,7 +377,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
             "             n                        (numeric) transactions before this one (by 1-based index in 'transactions' list) that must be present in the final block if this one is\n"
             "             ,...\n"
             "         ],\n"
-            "         \"fee\": n,                   (numeric) difference in value between transaction inputs and outputs (in duffs); for coinbase transactions, this is a negative Number of the total collected block fees (ie, not including the block subsidy); if key is not present, fee is unknown and clients MUST NOT assume there isn't one\n"
+            "         \"fee\": n,                   (numeric) difference in value between transaction inputs and outputs (in args); for coinbase transactions, this is a negative Number of the total collected block fees (ie, not including the block subsidy); if key is not present, fee is unknown and clients MUST NOT assume there isn't one\n"
             "         \"sigops\" : n,               (numeric) total number of SigOps, as counted for purposes of block limits; if key is not present, sigop count is unknown and clients MUST NOT assume there aren't any\n"
             "         \"required\" : true|false     (boolean) if provided and true, this transaction must be in the final block\n"
             "      }\n"
@@ -386,7 +386,7 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
             "  \"coinbaseaux\" : {                  (json object) data that should be included in the coinbase's scriptSig content\n"
             "      \"flags\" : \"flags\"            (string) \n"
             "  },\n"
-            "  \"coinbasevalue\" : n,               (numeric) maximum allowable input to coinbase transaction, including the generation award and transaction fees (in duffs)\n"
+            "  \"coinbasevalue\" : n,               (numeric) maximum allowable input to coinbase transaction, including the generation award and transaction fees (in args)\n"
             "  \"coinbasetxn\" : { ... },           (json object) information for coinbase transaction\n"
             "  \"target\" : \"xxxx\",               (string) The hash target\n"
             "  \"mintime\" : xxx,                   (numeric) The minimum timestamp appropriate for next block time in seconds since epoch (Jan 1 1970 GMT)\n"
@@ -496,23 +496,23 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
 
     if (g_connman->GetNodeCount(CConnman::CONNECTIONS_ALL) == 0)
-        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Dash Core is not connected!");
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Argoneum Core is not connected!");
 
     if (IsInitialBlockDownload())
-        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Dash Core is downloading blocks...");
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Argoneum Core is downloading blocks...");
 
     // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
     CScript payee;
     if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)
         && !masternodeSync.IsWinnersListSynced()
         && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
-            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Dash Core is downloading masternode winners...");
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Argoneum Core is downloading masternode winners...");
 
     // next bock is a superblock and we need governance info to correctly construct it
     if (sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)
         && !masternodeSync.IsSynced()
         && CSuperblock::IsValidBlockHeight(chainActive.Height() + 1))
-            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Dash Core is syncing with network...");
+            throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Argoneum Core is syncing with network...");
 
     static unsigned int nTransactionsUpdatedLast;
 
@@ -699,10 +699,12 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
         aMutable.push_back("version/force");
     }
 
+    CAmount blockValue = pblock->vtx[0].GetValueOut();
+
     result.push_back(Pair("previousblockhash", pblock->hashPrevBlock.GetHex()));
     result.push_back(Pair("transactions", transactions));
     result.push_back(Pair("coinbaseaux", aux));
-    result.push_back(Pair("coinbasevalue", (int64_t)pblock->vtx[0].GetValueOut()));
+    result.push_back(Pair("coinbasevalue", (int64_t)blockValue));
     result.push_back(Pair("longpollid", chainActive.Tip()->GetBlockHash().GetHex() + i64tostr(nTransactionsUpdatedLast)));
     result.push_back(Pair("target", hashTarget.GetHex()));
     result.push_back(Pair("mintime", (int64_t)pindexPrev->GetMedianTimePast()+1));
@@ -712,7 +714,16 @@ UniValue getblocktemplate(const UniValue& params, bool fHelp)
     result.push_back(Pair("sizelimit", (int64_t)MaxBlockSize(fDIP0001ActiveAtTip)));
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
-    result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
+    result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight + 1)));
+
+    CAmount founderPayment = GetFounderPayment(pindexPrev->nHeight + 1, blockValue);
+    if (founderPayment > 0) {
+        UniValue founderPaymentObj(UniValue::VOBJ);
+        founderPaymentObj.push_back(Pair("founderpayee", Params().FounderAddress().c_str()));
+        founderPaymentObj.push_back(Pair("amount", founderPayment));
+        result.push_back(Pair("founderreward", founderPaymentObj));
+        result.push_back(Pair("founder_reward_enforced", true));
+    }
 
     UniValue masternodeObj(UniValue::VOBJ);
     if(pblock->txoutMasternode != CTxOut()) {

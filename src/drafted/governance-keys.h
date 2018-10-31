@@ -8,17 +8,17 @@ vector<SecureString> vGovernanceKeys;
 CCriticalSection cs_vGovernanceKeys;
 
 /*
-	
+
 	Notes:
-	
+
 	- Users will configure their keys, something like this:
 
-	dash.conf:
+	argoneum.conf:
 
 		addgovkey=PrivKey1:name1 #comments
 		addgovkey=PrivKey2:name2 #comments
 
-	- Each of these will be securely secured in memory, then parsed and the secret will be used temporarily while 
+	- Each of these will be securely secured in memory, then parsed and the secret will be used temporarily while
 		creating a new goverance object which requires a signature
 */
 

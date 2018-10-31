@@ -17,7 +17,7 @@ import base64
 import httplib
 import sys
 import hashlib
-import dash_hash
+import argoneum_hash
 import datetime
 import time
 from collections import namedtuple
@@ -55,7 +55,7 @@ def calc_hdr_hash(blk_hdr):
 	#hash2_o = hash2.digest()
 
 	#return hash2_o
-        pow_hash = dash_hash.getPoWHash(blk_hdr)
+        pow_hash = argoneum_hash.getPoWHash(blk_hdr)
         return pow_hash
 
 def calc_hash_str(blk_hdr):
@@ -166,7 +166,7 @@ class BlockDataCopier:
 			self.highTS = blkTS
 
 		if (self.blkCountOut % 1000) == 0:
-			print('%i blocks scanned, %i blocks written (of %i, %.1f%% complete)' % 
+			print('%i blocks scanned, %i blocks written (of %i, %.1f%% complete)' %
 					(self.blkCountIn, self.blkCountOut, len(self.blkindex), 100.0 * self.blkCountOut / len(self.blkindex)))
 
 	def inFileName(self, fn):

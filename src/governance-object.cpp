@@ -441,7 +441,7 @@ bool CGovernanceObject::IsValidLocally(std::string& strError, bool& fMissingMast
 
     // CHECK COLLATERAL IF REQUIRED (HIGH CPU USAGE)
 
-    if(fCheckCollateral) { 
+    if(fCheckCollateral) {
         if((nObjectType == GOVERNANCE_OBJECT_TRIGGER) || (nObjectType == GOVERNANCE_OBJECT_WATCHDOG)) {
             std::string strOutpoint = vinMasternode.prevout.ToStringShort();
             masternode_info_t infoMn;
@@ -454,7 +454,7 @@ bool CGovernanceObject::IsValidLocally(std::string& strError, bool& fMissingMast
                 } else if (err == CMasternode::COLLATERAL_UTXO_NOT_FOUND) {
                     strError = "Failed to find Masternode UTXO, missing masternode=" + strOutpoint + "\n";
                 } else if (err == CMasternode::COLLATERAL_INVALID_AMOUNT) {
-                    strError = "Masternode UTXO should have 1000 DASH, missing masternode=" + strOutpoint + "\n";
+                    strError = "Masternode UTXO should have 10000 AGM, missing masternode=" + strOutpoint + "\n";
                 }
 
                 return false;

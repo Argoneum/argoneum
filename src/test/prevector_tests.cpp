@@ -9,7 +9,7 @@
 #include "serialize.h"
 #include "streams.h"
 
-#include "test/test_dash.h"
+#include "test/test_argoneum.h"
 
 #include <boost/test/unit_test.hpp>
 
@@ -36,7 +36,7 @@ class prevector_tester {
         {
             local_check(a == b);
         }
-    void local_check(bool b) 
+    void local_check(bool b)
     {
         passed &= b;
     }
@@ -171,8 +171,8 @@ public:
         test();
     }
     ~prevector_tester() {
-        BOOST_CHECK_MESSAGE(passed, "insecure_rand_Rz: " 
-                << insecure_rand_Rz_cache 
+        BOOST_CHECK_MESSAGE(passed, "insecure_rand_Rz: "
+                << insecure_rand_Rz_cache
                 << ", insecure_rand_Rw: "
                 << insecure_rand_Rw_cache);
     }

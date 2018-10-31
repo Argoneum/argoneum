@@ -21,7 +21,7 @@ Construct a linear, no-fork, best version of the blockchain.
 
 ### [Qos](/contrib/qos) ###
 
-A Linux bash script that will set up traffic control (tc) to limit the outgoing bandwidth for connections to the Dash network. This means one can have an always-on dashd instance running, and another local dashd/dash-qt instance which connects to this node and receives blocks from it.
+A Linux bash script that will set up traffic control (tc) to limit the outgoing bandwidth for connections to the Argoneum network. This means one can have an always-on argoneumd instance running, and another local argoneumd/argoneum-qt instance which connects to this node and receives blocks from it.
 
 ### [Seeds](/contrib/seeds) ###
 Utility to generate the pnSeed[] array that is compiled into the client.
@@ -30,23 +30,23 @@ Build Tools and Keys
 ---------------------
 
 ### [Debian](/contrib/debian) ###
-Contains files used to package dashd/dash-qt
-for Debian-based Linux systems. If you compile dashd/dash-qt yourself, there are some useful files here.
+Contains files used to package argoneumd/argoneum-qt
+for Debian-based Linux systems. If you compile argoneumd/argoneum-qt yourself, there are some useful files here.
 
 ### [Gitian-descriptors](/contrib/gitian-descriptors) ###
 Gavin's notes on getting gitian builds up and running using KVM.
 
 ### [Gitian-downloader](/contrib/gitian-downloader)
-Various PGP files of core developers. 
+Various PGP files of core developers.
 
 ### [MacDeploy](/contrib/macdeploy) ###
-Scripts and notes for Mac builds. 
+Scripts and notes for Mac builds.
 
-Test and Verify Tools 
+Test and Verify Tools
 ---------------------
 
 ### [TestGen](/contrib/testgen) ###
-Utilities to generate test vectors for the data-driven Dash tests.
+Utilities to generate test vectors for the data-driven Argoneum tests.
 
 ### [Test Patches](/contrib/test-patches) ###
 These patches are applied when the automated pull-tester

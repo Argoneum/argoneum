@@ -2,7 +2,7 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 #include "addrman.h"
-#include "test/test_dash.h"
+#include "test/test_argoneum.h"
 #include <string>
 #include <boost/test/unit_test.hpp>
 #include "hash.h"
@@ -81,8 +81,8 @@ BOOST_AUTO_TEST_CASE(caddrdb_read)
 
     CService addr1, addr2, addr3;
     Lookup("250.7.1.1", addr1, 8333, false);
-    Lookup("250.7.2.2", addr2, 9999, false);
-    Lookup("250.7.3.3", addr3, 9999, false);
+    Lookup("250.7.2.2", addr2, 9898, false);
+    Lookup("250.7.3.3", addr3, 9898, false);
 
     // Add three addresses to new table.
     CService source;
@@ -158,7 +158,7 @@ BOOST_AUTO_TEST_CASE(cnode_simple_test)
 
     in_addr ipv4Addr;
     ipv4Addr.s_addr = 0xa0b0c001;
-    
+
     CAddress addr = CAddress(CService(ipv4Addr, 7777), NODE_NETWORK);
     std::string pszDest = "";
     bool fInboundIn = false;

@@ -197,7 +197,7 @@ void CActiveMasternode::ManageStateInitial(CConnman& connman)
 
 void CActiveMasternode::ManageStateRemote()
 {
-    LogPrint("masternode", "CActiveMasternode::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyMasternode.GetID() = %s\n", 
+    LogPrint("masternode", "CActiveMasternode::ManageStateRemote -- Start status = %s, type = %s, pinger enabled = %d, pubKeyMasternode.GetID() = %s\n",
              GetStatus(), GetTypeString(), fPingerEnabled, pubKeyMasternode.GetID().ToString());
 
     mnodeman.CheckMasternode(pubKeyMasternode, true);

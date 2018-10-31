@@ -1,0 +1,20 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/argoneum_bg.qm</file>
+        <file alias="de">locale/argoneum_de.qm</file>
+        <file alias="en">locale/argoneum_en.qm</file>
+        <file alias="es">locale/argoneum_es.qm</file>
+        <file alias="fi">locale/argoneum_fi.qm</file>
+        <file alias="fr">locale/argoneum_fr.qm</file>
+        <file alias="it">locale/argoneum_it.qm</file>
+        <file alias="ja">locale/argoneum_ja.qm</file>
+        <file alias="pl">locale/argoneum_pl.qm</file>
+        <file alias="pt">locale/argoneum_pt.qm</file>
+        <file alias="ru">locale/argoneum_ru.qm</file>
+        <file alias="sk">locale/argoneum_sk.qm</file>
+        <file alias="sv">locale/argoneum_sv.qm</file>
+        <file alias="vi">locale/argoneum_vi.qm</file>
+        <file alias="zh_CN">locale/argoneum_zh_CN.qm</file>
+        <file alias="zh_TW">locale/argoneum_zh_TW.qm</file>
+    </qresource>
+</RCC>

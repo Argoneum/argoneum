@@ -99,17 +99,17 @@ void AddTimeData(const CNetAddr& ip, int64_t nOffsetSample)
                 if (!fMatch)
                 {
                     fDone = true;
-                    string strMessage = _("Please check that your computer's date and time are correct! If your clock is wrong Dash Core will not work properly.");
+                    string strMessage = _("Please check that your computer's date and time are correct! If your clock is wrong Argoneum Core will not work properly.");
                     strMiscWarning = strMessage;
                     uiInterface.ThreadSafeMessageBox(strMessage, "", CClientUIInterface::MSG_WARNING);
                 }
             }
         }
-        
+
         BOOST_FOREACH(int64_t n, vSorted)
             LogPrint("net", "%+d  ", n);
         LogPrint("net", "|  ");
-        
+
         LogPrint("net", "nTimeOffset = %+d  (%+d minutes)\n", nTimeOffset, nTimeOffset/60);
     }
 }

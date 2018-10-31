@@ -1,0 +1,6 @@
+usr/local/bin/argoneum-qt usr/bin
+share/pixmaps/argoneum32.xpm usr/share/pixmaps
+share/pixmaps/argoneum16.xpm usr/share/pixmaps
+share/pixmaps/argoneum128.png usr/share/pixmaps
+debian/argoneum-qt.desktop usr/share/applications
+debian/argoneum-qt.protocol usr/share/kde4/services/

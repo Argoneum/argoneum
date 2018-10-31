@@ -4,10 +4,10 @@
 <dict>
 	<key>window_bounds</key>
 	<array>
-		<integer>300</integer>
-		<integer>300</integer>
-		<integer>800</integer>
-		<integer>620</integer>
+		<integer>300</integer>		<!-- L -->
+		<integer>200</integer>		<!-- T -->
+		<integer>800</integer>		<!-- R -->
+		<integer>520</integer>		<!-- B -->
 	</array>
 	<key>background_picture</key>
 	<string>background.tiff</string>
@@ -22,7 +22,7 @@
 			<integer>370</integer>
 			<integer>156</integer>
 		</array>
-		<key>Dash-Qt.app</key>
+		<key>Argoneum-Qt.app</key>
 		<array>
 			<integer>128</integer>
 			<integer>156</integer>

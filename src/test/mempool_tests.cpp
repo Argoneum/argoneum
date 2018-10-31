@@ -5,7 +5,7 @@
 #include "txmempool.h"
 #include "util.h"
 
-#include "test/test_dash.h"
+#include "test/test_argoneum.h"
 
 #include <boost/test/unit_test.hpp>
 #include <list>
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(MempoolRemoveTest)
     testPool.remove(txParent, removed, true);
     BOOST_CHECK_EQUAL(removed.size(), 1);
     removed.clear();
-    
+
     // Parent, children, grandchildren:
     testPool.addUnchecked(txParent.GetHash(), entry.FromTx(txParent));
     for (int i = 0; i < 3; i++)

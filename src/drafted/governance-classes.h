@@ -6,8 +6,8 @@
  *
  *   -- fields can be updated by the network dynamically (adding a company type, etc)
  *   -- fields can be voted on, leveling them up/down
- *   -- levels determine pay in DO/DAO company types 
- *   
+ *   -- levels determine pay in DO/DAO company types
+ *
  * FIELDS
  * =========================
  *
@@ -20,7 +20,7 @@
  *   foundation-type us.501c6, us.501c3
  *   contract-type blockchain/internal, external/contractor
  *   proposal-type explicit, governance, wikiamend, generic, black
- *   
+ *
  *   lvl 1,2,3,4.. roman
  *   status ok, error, active-removal
  *   proposal-rights explicit, explicit_generic, all
@@ -45,15 +45,15 @@
  * =========================
  *
  *   // network
- *   CDashNetwork lvl, network-type, network-status, network-error, milestone-status*
+ *   CArgoneumNetwork lvl, network-type, network-status, network-error, milestone-status*
  *   CCategory lvl, category-type, status, status-error
  *   CNetworkGlobalVariable lvl, global-type, status, status-error
  *   // base: actor
  *   CGroup lvl, actor-type, status, status-error, group-type
- *   CUser lvl, actor-type, status, status-error, user-type, contract-status, contract-status-error 
+ *   CUser lvl, actor-type, status, status-error, user-type, contract-status, contract-status-error
  *   CDAO lvl, actor-type, status, status-error, dao-type
  *   CCompany lvl, actor-type, secondary-type, ternary-type, status, status-error
- *   CCommittee lvl, actor-type, status, status-error, committee-type ov 
+ *   CCommittee lvl, actor-type, status, status-error, committee-type ov
  *   CFoundation lvl, actor-type, status, status-error, foundation-type ov
  *   // base: project manangement
  *   CProposal lvl, proposal-type, status, status-error
@@ -72,14 +72,14 @@
  *
  *   -- Each of the implementable classes use their own serializers
  *   -- Each class is responsible for it's own unique values
- *   -- Most of the values in these classes can be overriden 
+ *   -- Most of the values in these classes can be overriden
  *
  *  CGovernanceNode (base)
  *
  *  TREE STRUCTURE
  *  ===========================================
- * 
- *  DASH NETWORK (ROOT)
+ *
+ *  ARGONEUM NETWORK (ROOT)
  *      -> NETWORK GLOBOLS
  *          -> SWITCHES, SETTINGS
  *      -> CATEGORIES
@@ -88,7 +88,7 @@
  *          -> CATEGORY (CONTRACT)
  *              -> CATEGORIES (INTERNAL, EXTERNAL, ...)
  *      -> GROUPS
- *          -> GROUP 1 
+ *          -> GROUP 1
  *              -> USER : ENDUSER
  *      -> COMPANIES
  *          -> DAO
@@ -117,7 +117,7 @@ private:
     int nLevel;
     std::string strCategory;
 
-    // Current OBJECT STATUS (see http://govman.dash.org/index.php/Documentation_:_Status_Field)
+    // Current OBJECT STATUS (see http://govman.argoneum.org/index.php/Documentation_:_Status_Field)
     int nStatusID;
     std::string strStatusMessage;
 
@@ -130,7 +130,7 @@ public:
 };
 
 // // root node
-class CDashNetwork : public CGovernanceObject
+class CArgoneumNetwork : public CGovernanceObject
 {
 private:
     std::string strName;
@@ -138,7 +138,7 @@ private:
 
 
 public:
-    CDashNetwork(UniValue objIn)
+    CArgoneumNetwork(UniValue objIn)
     {
         strName = objIn["name"].get_str();
         strURL = objIn["name"].get_str();
@@ -174,9 +174,9 @@ public:
 
 };
 
-// // can be under: DashNetwork
+// // can be under: ArgoneumNetwork
 // //   -- signature requirements : Key1(User)
-// class CDashNetworkVariable : public CGovernanceObject
+// class CArgoneumNetworkVariable : public CGovernanceObject
 // {
 // private:
 
@@ -220,7 +220,7 @@ public:
 
 // // can be under: ANY
 // //   -- signature requirements : Key1(User)
-// template <typename VO> 
+// template <typename VO>
 // class CValueOverride : public CGovernanceObject
 // {
 
@@ -279,14 +279,14 @@ public:
 //     // isRootCategory()
 //     // {
 //     //     // root categories won't have categories as parents
-//     //     return (IsType() == DashNetwork);
+//     //     return (IsType() == ArgoneumNetwork);
 //     // }
 
 //     // isSubcategoryOf(std::string strParentName)
 //     // {
 //     //     CCategory parent(strParentName);
 //     //     if(!parent) return false;
-//     //     return isSubcategoryOf(parent);        
+//     //     return isSubcategoryOf(parent);
 //     // }
 
 //     // isSubcategoryOf(CCategory parentIn)
@@ -294,7 +294,7 @@ public:
 //     //     // are we related to this category?
 //     //     if parent.GetHash() == pParent->GetHash():
 //     //         return true
-        
+
 //     //     return false;
 //     // }
 
@@ -430,7 +430,7 @@ public:
 //         READWRITE(nTime);
 //         READWRITE(vecSig);
 //     }
-        
+
 // };
 
 // class CProject : public CGovernanceObject
@@ -550,7 +550,7 @@ public:
 //     /*
 //         proposal will be paid on this block
 //             -- if it's not paid, it will expire unpaid
-//     */ 
+//     */
 //     int nBlockStart;
 //     CAmount nAmount;
 //     CScript address;

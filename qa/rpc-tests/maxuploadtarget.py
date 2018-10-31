@@ -84,11 +84,11 @@ class MaxUploadTest(BitcoinTestFramework):
     def __init__(self):
         self.utxo = []
         self.txouts = gen_return_txouts()
- 
+
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("DASHD", "dashd"),
-                          help="dashd binary to test")
+                          default=os.getenv("ARGONEUMD", "argoneumd"),
+                          help="argoneumd binary to test")
 
     def setup_chain(self):
         initialize_chain_clean(self.options.tmpdir, 2)
@@ -187,7 +187,7 @@ class MaxUploadTest(BitcoinTestFramework):
             assert_equal(test_nodes[0].block_receive_map[big_old_block], i+1)
 
         assert_equal(len(self.nodes[0].getpeerinfo()), 3)
-        # At most a couple more tries should succeed (depending on how long 
+        # At most a couple more tries should succeed (depending on how long
         # the test has been running so far).
         for i in xrange(3):
             test_nodes[0].send_message(getdata_request)

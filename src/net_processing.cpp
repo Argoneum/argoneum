@@ -45,7 +45,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "Dash Core cannot be compiled without assertions."
+# error "Argoneum Core cannot be compiled without assertions."
 #endif
 
 int64_t nTimeBestReceived = 0; // Used only to inform the wallet of when we last received a block
@@ -703,12 +703,12 @@ bool static AlreadyHave(const CInv& inv) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
     case MSG_BLOCK:
         return mapBlockIndex.count(inv.hash);
 
-    /* 
-        Dash Related Inventory Messages
+    /*
+        Argoneum Related Inventory Messages
 
         --
 
-        We shouldn't update the sync times for each of the messages when we already have it. 
+        We shouldn't update the sync times for each of the messages when we already have it.
         We're going to be asking many nodes upfront for the full inventory list, so we'll get duplicates of these.
         We want to only update the time on new hits, so that we can time out appropriately if needed.
     */

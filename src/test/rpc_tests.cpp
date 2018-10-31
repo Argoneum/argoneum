@@ -8,7 +8,7 @@
 #include "base58.h"
 #include "netbase.h"
 
-#include "test/test_dash.h"
+#include "test/test_argoneum.h"
 
 #include <boost/algorithm/string.hpp>
 #include <boost/test/unit_test.hpp>
@@ -249,7 +249,7 @@ BOOST_AUTO_TEST_CASE(json_parse_errors)
 BOOST_AUTO_TEST_CASE(rpc_ban)
 {
     BOOST_CHECK_NO_THROW(CallRPC(string("clearbanned")));
-    
+
     UniValue r;
     BOOST_CHECK_NO_THROW(r = CallRPC(string("setban 127.0.0.0 add")));
     BOOST_CHECK_THROW(r = CallRPC(string("setban 127.0.0.0:8334")), runtime_error); //portnumber for setban not allowed

@@ -6,6 +6,7 @@
 
 #include "validation.h"
 
+#include "base58.h"
 #include "alert.h"
 #include "arith_uint256.h"
 #include "chainparams.h"
@@ -52,7 +53,7 @@
 using namespace std;
 
 #if defined(NDEBUG)
-# error "Dash Core cannot be compiled without assertions."
+# error "Argoneum Core cannot be compiled without assertions."
 #endif
 
 /**
@@ -90,7 +91,7 @@ std::atomic<bool> fDIP0001ActiveAtTip{false};
 
 uint256 hashAssumeValid;
 
-/** Fees smaller than this (in duffs) are considered zero fee (for relaying, mining and transaction creation) */
+/** Fees smaller than this (in args) are considered zero fee (for relaying, mining and transaction creation) */
 CFeeRate minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 
 CTxMemPool mempool(::minRelayTxFee);
@@ -1138,11 +1139,6 @@ bool GetTransaction(const uint256 &hash, CTransaction &txOut, const Consensus::P
     return false;
 }
 
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////
 //
 // CBlock and CBlockIndex
@@ -1230,67 +1226,51 @@ NOTE:   unlike bitcoin we are using PREVIOUS block height here,
 */
 CAmount GetBlockSubsidy(int nPrevBits, int nPrevHeight, const Consensus::Params& consensusParams, bool fSuperblockPartOnly)
 {
-    double dDiff;
-    CAmount nSubsidyBase;
+    double dDiff = ConvertBitsToDouble(nPrevBits);
+    CAmount nSubsidy;
 
-    if (nPrevHeight <= 4500 && Params().NetworkIDString() == CBaseChainParams::MAIN) {
-        /* a bug which caused diff to not be correctly calculated */
-        dDiff = (double)0x0000ffff / (double)(nPrevBits & 0x00ffffff);
-    } else {
-        dDiff = ConvertBitsToDouble(nPrevBits);
-    }
-
-    if (nPrevHeight < 5465) {
-        // Early ages...
-        // 1111/((x+1)^2)
-        nSubsidyBase = (1111.0 / (pow((dDiff+1.0),2.0)));
-        if(nSubsidyBase > 500) nSubsidyBase = 500;
-        else if(nSubsidyBase < 1) nSubsidyBase = 1;
-    } else if (nPrevHeight < 17000 || (dDiff <= 75 && nPrevHeight < 24000)) {
-        // CPU mining era
-        // 11111/(((x+51)/6)^2)
-        nSubsidyBase = (11111.0 / (pow((dDiff+51.0)/6.0,2.0)));
-        if(nSubsidyBase > 500) nSubsidyBase = 500;
-        else if(nSubsidyBase < 25) nSubsidyBase = 25;
-    } else {
-        // GPU/ASIC mining era
-        // 2222222/(((x+2600)/9)^2)
-        nSubsidyBase = (2222222.0 / (pow((dDiff+2600.0)/9.0,2.0)));
-        if(nSubsidyBase > 25) nSubsidyBase = 25;
-        else if(nSubsidyBase < 5) nSubsidyBase = 5;
-    }
+    if (nPrevHeight == 0)
+        nSubsidy = 1240000 * COIN;
+    else if (nPrevHeight + 1 > 10000)
+        nSubsidy = 30 * COIN;
+    else if (nPrevHeight + 1 > 3000)
+        nSubsidy = 15 * COIN;
+    else
+        nSubsidy = 0.1 * COIN;
 
     // LogPrintf("height %u diff %4.2f reward %d\n", nPrevHeight, dDiff, nSubsidyBase);
-    CAmount nSubsidy = nSubsidyBase * COIN;
 
-    // yearly decline of production by ~7.1% per year, projected ~18M coins max by year 2050+.
-    for (int i = consensusParams.nSubsidyHalvingInterval; i <= nPrevHeight; i += consensusParams.nSubsidyHalvingInterval) {
-        nSubsidy -= nSubsidy/14;
+    // Yearly decline of production
+    for (int i = consensusParams.nSubsidyHalvingStartBlock; i <= nPrevHeight; i += consensusParams.nSubsidyHalvingInterval) {
+        nSubsidy -= nSubsidy/consensusParams.nSubsidyHalvingRate;
     }
 
     // Hard fork to reduce the block reward by 10 extra percent (allowing budget/superblocks)
-    CAmount nSuperblockPart = (nPrevHeight > consensusParams.nBudgetPaymentsStartBlock) ? nSubsidy/10 : 0;
+    CAmount nSuperblockPart = (nPrevHeight > consensusParams.nBudgetPaymentsStartBlock) ? nSubsidy / 10 : 0;
 
     return fSuperblockPartOnly ? nSuperblockPart : nSubsidy - nSuperblockPart;
 }
 
+CAmount GetFounderPayment(int nHeight, CAmount blockValue) {
+    return (nHeight > 1) ? (blockValue * Params().FounderFee()) : 0;
+}
+
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    CAmount ret = blockValue/5; // start at 20%
+    CAmount ret;
 
-    int nMNPIBlock = Params().GetConsensus().nMasternodePaymentsIncreaseBlock;
-    int nMNPIPeriod = Params().GetConsensus().nMasternodePaymentsIncreasePeriod;
+    if (nHeight == 0)
+        ret = 0;
+    else if (nHeight > 10000)
+        ret = blockValue * 0.50;
+    else if (nHeight > 3000)
+        ret = blockValue * 0.05;
+    else
+        ret = blockValue * 0.05;
 
-                                                                      // mainnet:
-    if(nHeight > nMNPIBlock)                  ret += blockValue / 20; // 158000 - 25.0% - 2014-10-24
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 1)) ret += blockValue / 20; // 175280 - 30.0% - 2014-11-25
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 2)) ret += blockValue / 20; // 192560 - 35.0% - 2014-12-26
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 3)) ret += blockValue / 40; // 209840 - 37.5% - 2015-01-26
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 4)) ret += blockValue / 40; // 227120 - 40.0% - 2015-02-27
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 5)) ret += blockValue / 40; // 244400 - 42.5% - 2015-03-30
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 6)) ret += blockValue / 40; // 261680 - 45.0% - 2015-05-01
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 7)) ret += blockValue / 40; // 278960 - 47.5% - 2015-06-01
-    if(nHeight > nMNPIBlock+(nMNPIPeriod* 9)) ret += blockValue / 40; // 313520 - 50.0% - 2015-08-03
+    if (blockValue - ret < GetFounderPayment(nHeight, blockValue)) {
+        ret = 0;
+    }
 
     return ret;
 }
@@ -1863,7 +1843,7 @@ bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, unsigne
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("dash-scriptch");
+    RenameThread("argoneum-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -2016,8 +1996,8 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     // two in the chain that violate it. This prevents exploiting the issue against nodes during their
     // initial block download.
     bool fEnforceBIP30 = (!pindex->phashBlock) || // Enforce on CreateNewBlock invocations which don't have a hash.
-                          !((pindex->nHeight==91842 && pindex->GetBlockHash() == uint256S("0x00000000000a4d0a398161ffc163c503763b1f4360639393e0e4c8e300e0caec")) ||
-                           (pindex->nHeight==91880 && pindex->GetBlockHash() == uint256S("0x00000000000743f190a18c5577a3c2d2a1f610ae9601ac046a38084ccb7cd721")));
+                          !((pindex->nHeight==1 && pindex->GetBlockHash() == uint256S("0x0000000000000000000000000000000000000000000000000000000000000000")) ||
+                           (pindex->nHeight==2 && pindex->GetBlockHash() ==  uint256S("0x0000000000000000000000000000000000000000000000000000000000000000")));
 
     // Once BIP34 activated it was not possible to create new duplicate coinbases and thus other than starting
     // with the 2 existing duplicate coinbase pairs, not possible to create overwriting txs.  But by the
@@ -2215,7 +2195,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint("bench", "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n", (unsigned)block.vtx.size(), 0.001 * (nTime3 - nTime2), 0.001 * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : 0.001 * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * 0.000001);
 
-    // DASH : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
+    // ARGONEUM CORE : MODIFIED TO CHECK MASTERNODE PAYMENTS AND SUPERBLOCKS
 
     // It's possible that we simply don't have enough data and this could fail
     // (i.e. block itself could be a correct one and we need to store it),
@@ -2226,15 +2206,32 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     CAmount blockReward = nFees + GetBlockSubsidy(pindex->pprev->nBits, pindex->pprev->nHeight, chainparams.GetConsensus());
     std::string strError = "";
     if (!IsBlockValueValid(block, pindex->nHeight, blockReward, strError)) {
-        return state.DoS(0, error("ConnectBlock(DASH): %s", strError), REJECT_INVALID, "bad-cb-amount");
+        return state.DoS(0, error("ConnectBlock(ARGONEUM): %s", strError), REJECT_INVALID, "bad-cb-amount");
     }
 
     if (!IsBlockPayeeValid(block.vtx[0], pindex->nHeight, blockReward)) {
         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-        return state.DoS(0, error("ConnectBlock(DASH): couldn't find masternode or superblock payments"),
+        return state.DoS(0, error("ConnectBlock(ARGONEUM): couldn't find masternode or superblock payments"),
                                 REJECT_INVALID, "bad-cb-payee");
     }
-    // END DASH
+    // END ARGONEUM CORE
+
+    CAmount founderPayment = GetFounderPayment(pindex->nHeight, blockReward);
+    if (founderPayment > 0) {
+        CScript FounderScript = GetScriptForDestination(CBitcoinAddress(Params().FounderAddress()).Get());
+        bool FounderPaid = false;
+        const CTransaction& tx = block.vtx[0];
+
+        BOOST_FOREACH (const CTxOut& output, tx.vout) {
+            if (output.scriptPubKey == FounderScript && output.nValue == founderPayment) {
+                FounderPaid = true;
+                break;
+            }
+        }
+        if (!FounderPaid) {
+            return state.DoS(0, error("ConnectBlock(ARGONEUM): no founder reward"), REJECT_INVALID, "no-founder-reward");
+        }
+    }
 
     if (!control.Wait())
         return state.DoS(100, false);
@@ -3166,7 +3163,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                              REJECT_INVALID, "bad-cb-multiple");
 
 
-    // DASH : CHECK TRANSACTIONS FOR INSTANTSEND
+    // ARGONEUM : CHECK TRANSACTIONS FOR INSTANTSEND
 
     if(sporkManager.IsSporkActive(SPORK_3_INSTANTSEND_BLOCK_FILTERING)) {
         // We should never accept block which conflicts with completed transaction lock,
@@ -3183,17 +3180,17 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                     // relaying instantsend data won't help it.
                     LOCK(cs_main);
                     mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                    return state.DoS(0, error("CheckBlock(DASH): transaction %s conflicts with transaction lock %s",
+                    return state.DoS(0, error("CheckBlock(ARGONEUM): transaction %s conflicts with transaction lock %s",
                                                 tx.GetHash().ToString(), hashLocked.ToString()),
                                      REJECT_INVALID, "conflict-tx-lock");
                 }
             }
         }
     } else {
-        LogPrintf("CheckBlock(DASH): spork is off, skipping transaction locking checks\n");
+        LogPrintf("CheckBlock(ARGONEUM): spork is off, skipping transaction locking checks\n");
     }
 
-    // END DASH
+    // END ARGONEUM
 
     // Check transactions
     BOOST_FOREACH(const CTransaction& tx, block.vtx)
@@ -3958,7 +3955,7 @@ bool LoadBlockIndex()
     return true;
 }
 
-bool InitBlockIndex(const CChainParams& chainparams) 
+bool InitBlockIndex(const CChainParams& chainparams)
 {
     LOCK(cs_main);
 

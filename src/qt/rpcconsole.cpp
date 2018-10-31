@@ -279,7 +279,7 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
     connect(ui->fontBiggerButton, SIGNAL(clicked()), this, SLOT(fontBigger()));
     connect(ui->fontSmallerButton, SIGNAL(clicked()), this, SLOT(fontSmaller()));
     connect(ui->btnClearTrafficGraph, SIGNAL(clicked()), ui->trafficGraph, SLOT(clear()));
-    
+
     // Wallet Repair Buttons
     // connect(ui->btn_salvagewallet, SIGNAL(clicked()), this, SLOT(walletSalvage()));
     // Disable salvage option in GUI, it's way too powerful and can lead to funds loss
@@ -440,7 +440,7 @@ void RPCConsole::setClientModel(ClientModel *model)
         connect(model->getPeerTableModel(), SIGNAL(layoutChanged()), this, SLOT(peerLayoutChanged()));
         // peer table signal handling - cache selected node ids
         connect(model->getPeerTableModel(), SIGNAL(layoutAboutToBeChanged()), this, SLOT(peerLayoutAboutToChange()));
-        
+
         // set up ban table
         ui->banlistWidget->setModel(model->getBanTableModel());
         ui->banlistWidget->verticalHeader()->hide();
@@ -595,7 +595,7 @@ void RPCConsole::buildParameterlist(QString arg)
     args.removeAll(ZAPTXES2);
     args.removeAll(UPGRADEWALLET);
     args.removeAll(REINDEX);
-   
+
     // Append repair parameter to command line.
     args.append(arg);
 
@@ -618,7 +618,7 @@ void RPCConsole::clear(bool clearHistory)
     // (when using width/height on an img, Qt uses nearest instead of linear interpolation)
     QString iconPath = ":/icons/" + GUIUtil::getThemeName() + "/";
     QString iconName = "";
-    
+
     for(int i=0; ICON_MAPPING[i].url; ++i)
     {
         iconName = ICON_MAPPING[i].source;
@@ -641,7 +641,7 @@ void RPCConsole::clear(bool clearHistory)
             ).arg(fixedFontInfo.family(), QString("%1pt").arg(consoleFontSize))
         );
 
-    message(CMD_REPLY, (tr("Welcome to the Dash Core RPC console.") + "<br>" +
+    message(CMD_REPLY, (tr("Welcome to the Argoneum Core RPC console.") + "<br>" +
                         tr("Use up and down arrows to navigate history, and <b>Ctrl-L</b> to clear screen.") + "<br>" +
                         tr("Type <b>help</b> for an overview of available commands.")), true);
 }
@@ -995,7 +995,7 @@ void RPCConsole::disconnectSelectedNode()
 {
     if(!g_connman)
         return;
-    
+
     // Get selected peer addresses
     QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId);
     for(int i = 0; i < nodes.count(); i++)
@@ -1012,7 +1012,7 @@ void RPCConsole::banSelectedNode(int bantime)
 {
     if (!clientModel || !g_connman)
         return;
-    
+
     // Get selected peer addresses
     QList<QModelIndex> nodes = GUIUtil::getEntryData(ui->peerWidget, PeerTableModel::NetNodeId);
     for(int i = 0; i < nodes.count(); i++)
