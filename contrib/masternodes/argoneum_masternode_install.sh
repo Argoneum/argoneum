@@ -34,6 +34,7 @@ UFWD="/etc/ufw/applications.d"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+BLINK='\033[5m'
 NC='\033[0m'
 
 
@@ -118,6 +119,7 @@ function download_node() {
 }
 
 function get_ip() {
+  echo -e "${GREEN}Autodetecting IP address(es)...${NC}"
   declare -a NODE_IPS
   for ips in $(netstat -i | awk '!/Kernel|Iface|lo/ {print $1," "}'); do
     NODE_IPS+=($(curl --interface $ips --connect-timeout 2 -s4 icanhazip.com))
@@ -135,6 +137,17 @@ function get_ip() {
       NODEIP=${NODE_IPS[$choose_ip]}
   else
     NODEIP=${NODE_IPS[0]}
+  fi
+
+  if [ -z "$NODEIP" ]; then
+    echo
+    echo -e "${RED}Unable to detect external IP. Press Ctrl-C to abort or any other key to retry IP autodetect.${NC}"
+    local dummy
+    read -rsn1 dummy
+    return 1
+  else
+    echo -e "Masternode external IP address: ${GREEN}$NODEIP${NC}"
+    return 0
   fi
 }
 
@@ -281,7 +294,7 @@ function important_information() {
   echo -e "Edit ${RED}masternode.conf${NC} file in your cold wallet data directory and add the following line:"
   echo -e "${GREEN}mn1 $NODEIP:$COIN_PORT $COINKEY your-tx-hash your-tx-index${NC}"
   echo -e "(on Windows you may use 'Tools -> Open Masternode Configurtion File' menu item to edit it)"
-  echo -e "Restart your wallet, wait for at least 15 confirmations of collateral tx and start your masternode."
+  echo -e "Restart your wallet, wait for at least ${RED}${BLINK}15 confirmations${NC} of collateral tx and start your masternode."
   echo -e "${GREEN}================================================================================================================================${NC}"
   echo -e "This script is based on the work of zoldur, ${RED}https://github.com/zoldur/${NC}"
   echo -e "Used according to GNU GPL 3.0 terms and conditions."
@@ -299,7 +312,7 @@ checks
 if asksure; then
   prepare_system
   download_node
-  get_ip
+  while ! get_ip; do : ; done
   create_config
   create_key
   update_config
