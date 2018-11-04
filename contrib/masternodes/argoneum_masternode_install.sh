@@ -15,6 +15,7 @@ COIN_NAME="Argoneum Core"
 coin_name="argoneum"
 COIN_DATA="argoneum"
 COIN_PORT=9898
+COIN_RPCPORT=9899
 
 CONFIGFOLDER="$(eval echo "~$RUNAS")/.${COIN_DATA}"
 CONFIG_FILE="${coin_name}.conf"
@@ -161,6 +162,7 @@ rpcpassword=$RPCPASSWORD
 
 #bind=$NODEIP
 port=$COIN_PORT
+rpcport=$COIN_RPCPORT
 
 listen=1
 server=1
@@ -242,7 +244,7 @@ User=$RUNAS
 Group=$RUNAS
 
 Type=forking
-#PIDFile=$CONFIGFOLDER/$COIN_NAME.pid
+#PIDFile=$CONFIGFOLDER/$coin_name.pid
 
 ExecStart=$COIN_PATH$COIN_DAEMON -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE -daemon
 ExecStop=-$COIN_PATH$COIN_CLI -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE stop
