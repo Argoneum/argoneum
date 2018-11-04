@@ -17,7 +17,8 @@ COIN_DATA="argoneum"
 COIN_PORT=9898
 COIN_RPCPORT=9899
 
-CONFIGFOLDER="$(eval echo "~$RUNAS")/.${COIN_DATA}"
+CONFIGHOME="$(eval echo "~$RUNAS")"
+CONFIGFOLDER="${CONFIGHOME}/.${COIN_DATA}"
 CONFIG_FILE="${coin_name}.conf"
 COIN_DAEMON="${coin_name}d"
 COIN_SERVICE="${coin_name}"
@@ -39,7 +40,7 @@ BLINK='\033[5m'
 NC='\033[0m'
 
 
-function checks() {
+function check_system() {
   if [[ $(lsb_release -d) != *16.04* ]] && [[ $(lsb_release -d) != *17.10* ]] && [[ $(lsb_release -d) != *18.04* ]]; then
     echo -e "${RED}You are not running Ubuntu 16.04, 17.10 or 18.04. Installation is cancelled.${NC}"
     exit 1
@@ -49,28 +50,37 @@ function checks() {
      echo -e "${RED}$0 must be run as root.${NC}"
      exit 1
   fi
+}
 
+function check_daemon() {
   if [ -n "$(pidof "$COIN_DAEMON")" ] || [ -e "$COIN_DAEMON" ]; then
-    echo -e "${RED}$COIN_NAME is already installed.${NC}"
+    echo -e "${RED}$COIN_NAME is already installed and running. Stop it first to reinstall.${NC}"
     exit 1
   fi
 }
 
-function asksure() {
-  echo -e "You are going to install ${GREEN}$COIN_NAME${NC} masternode."
-  echo -e "This script will install the complete build environment, so you may compile/install any other coins later."
-  echo -e ""
-  echo -e "Type ${GREEN}Y${NC} to start installation or ${RED}N${NC} to abort:"
+function ask_yn() {
+  echo -en "$1"
   local answer
   while read -r -n 1 -s answer; do
     if [[ $answer = [YyNn] ]]; then
-      [[ $answer = [Yy] ]] && retval=0
-      [[ $answer = [Nn] ]] && retval=1
+      [[ $answer = [Yy] ]] && retval=1 && echo "YES"
+      [[ $answer = [Nn] ]] && retval=0 && echo "NO"
       break
     fi
   done
-  echo
   return $retval
+}
+
+function ask_components() {
+  echo -e "You are going to install ${GREEN}$COIN_NAME masternode${NC} and/or ${GREEN}$COIN_NAME Sentinel${NC}."
+  echo -e "This script will install the complete build environment, so you may compile/install any other coins later."
+  echo -e ""
+  ask_yn "Install masternode and build environment (type ${GREEN}Y${NC} or ${RED}N${NC}): "
+  INSTALL_MASTERNODE=$?
+
+  ask_yn "Install Sentinel (type ${GREEN}Y${NC} or ${RED}N${NC}): "
+  INSTALL_SENTINEL=$?
 }
 
 function prepare_system() {
@@ -275,6 +285,46 @@ EOF
   fi
 }
 
+function install_sentinel() {
+  echo -e "${GREEN}Installing and setting up Sentinel...${NC}"
+  apt-get -y install python-virtualenv git
+
+  local SENTINEL_PATH="sentinel-argoneum"
+  cd $CONFIGHOME
+  git clone https://github.com/argoneum/sentinel.git $SENTINEL_PATH
+  cd $SENTINEL_PATH
+
+  (
+    export HOME=$CONFIGHOME
+    virtualenv ./venv
+    ./venv/bin/pip install -r requirements.txt
+
+    echo -e "${GREEN}Testing Sentinel installation:${NC}"
+    ./venv/bin/py.test ./test
+
+    echo -e "${GREEN}Starting Sentinel for the first time (may take up to a minute)...${NC}"
+    echo -e "${RED}If masternode is not yet started, please ignore any error message below:${NC}"
+    ./venv/bin/python bin/sentinel.py
+  )
+
+  echo -e "${GREEN}Installing user crontab job to run Sentinel periodically...${NC}"
+  local JOB="* * * * * cd $CONFIGHOME/$SENTINEL_PATH && ./venv/bin/python bin/sentinel.py >/dev/null 2>&1"
+
+  if ! (crontab -l | grep $SENTINEL_PATH &>/dev/null); then
+    cat <<EOF | crontab -
+$(crontab -l 2>/dev/null)
+
+# Sentinel for $coin_name
+$JOB
+EOF
+    echo -e "${GREEN}Crontab job installed:${NC}"
+    crontab -l | grep $SENTINEL_PATH
+  else
+    echo -e "${RED}Crontab job already exists:${NC}"
+    crontab -l | grep $SENTINEL_PATH
+  fi
+}
+
 function important_information() {
   echo
   echo
@@ -311,8 +361,10 @@ function important_information() {
 
 ##### Entry point #####
 clear
-checks
-if asksure; then
+check_system
+ask_components
+if [ "$INSTALL_MASTERNODE" = "1" ]; then
+  check_daemon
   prepare_system
   download_node
   while ! get_ip; do : ; done
@@ -322,5 +374,10 @@ if asksure; then
   #enable_firewall
   enable_firewall_app
   configure_systemd
+fi
+if [ "$INSTALL_SENTINEL" = "1" ]; then
+  install_sentinel
+fi
+if [ "$INSTALL_MASTERNODE" = "1" ]; then
   important_information
 fi
