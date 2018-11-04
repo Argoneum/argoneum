@@ -77,6 +77,7 @@ function prepare_system() {
   echo -e "${GREEN}This process might take up to 15 minutes, please be patient.${NC}"
 
   echo -e "${GREEN}Updating system packages...${NC}"
+  add-apt-repository universe
   apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" -y -qq upgrade
