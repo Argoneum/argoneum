@@ -53,9 +53,17 @@ function check_system() {
 }
 
 function check_daemon() {
-  if [ -n "$(pidof "$COIN_DAEMON")" ] || [ -e "$COIN_DAEMON" ]; then
-    echo -e "${RED}$COIN_NAME is already installed and running. Stop it first to reinstall.${NC}"
-    exit 1
+  if [ -n "$(pidof "$COIN_DAEMON")" ]; then
+    ask_yn "${RED}$COIN_NAME is already installed and running. Try to stop the service for upgrade${NC} (type ${GREEN}Y${NC} or ${RED}N${NC}): "
+    if [ "$?" = "0" ]; then
+      echo -e "${RED}Stop the daemon first to reinstall, aborting.${NC}"
+      exit 1
+    fi
+    systemctl stop $COIN_SERVICE.service &>/dev/null
+    if [ -n "$(pidof "$COIN_DAEMON")" ]; then
+      echo -e "${RED}Unable to stop $COIN_SERVICE.service, aborting.${NC}"
+      exit 1
+    fi
   fi
 }
 
@@ -73,8 +81,8 @@ function ask_yn() {
 }
 
 function ask_components() {
-  echo -e "You are going to install ${GREEN}$COIN_NAME masternode${NC} and/or ${GREEN}$COIN_NAME Sentinel${NC}."
-  echo -e "This script will install the complete build environment, so you may compile/install any other coins later."
+  echo -e "You are going to install or upgrade ${GREEN}$COIN_NAME masternode${NC} and/or ${GREEN}Sentinel${NC}."
+  echo -e "This script will also install the complete build environment, so you may compile/install any other coins later."
   echo -e ""
   ask_yn "Install masternode and build environment (type ${GREEN}Y${NC} or ${RED}N${NC}): "
   INSTALL_MASTERNODE=$?
@@ -287,7 +295,7 @@ EOF
 
 function install_sentinel() {
   echo -e "${GREEN}Installing and setting up Sentinel...${NC}"
-  apt-get -y install python-virtualenv git
+  apt-get -y install python-virtualenv virtualenv git
 
   local SENTINEL_PATH="sentinel-argoneum"
   cd $CONFIGHOME
