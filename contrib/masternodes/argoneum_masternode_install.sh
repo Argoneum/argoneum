@@ -293,6 +293,25 @@ EOF
   fi
 }
 
+function configure_logrotate() {
+  echo -e "${GREEN}Configuring daemon log rotations...${NC}"
+  cat <<EOF >/etc/logrotate.d/$COIN_SERVICE
+$CONFIGFOLDER/debug.log
+{
+        su $RUNAS $RUNAS
+        size 100k
+        rotate 1
+        copytruncate
+        daily
+        missingok
+        notifempty
+        compress
+        nodelaycompress
+        sharedscripts
+}
+EOF
+}
+
 function install_sentinel() {
   echo -e "${GREEN}Installing and setting up Sentinel...${NC}"
   apt-get -y install python-virtualenv virtualenv git
@@ -382,6 +401,7 @@ if [ "$INSTALL_MASTERNODE" = "1" ]; then
   #enable_firewall
   enable_firewall_app
   configure_systemd
+  configure_logrotate
 fi
 if [ "$INSTALL_SENTINEL" = "1" ]; then
   install_sentinel
