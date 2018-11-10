@@ -1,5 +1,5 @@
 ---
-name: "argoneum-linux-1.0.0.0"
+name: "argoneum-linux-1.1.0.0"
 enable_cache: true
 suites:
 - "trusty"
@@ -18,7 +18,7 @@ packages:
 - "binutils-gold"
 - "ca-certificates"
 - "python"
-reference_datetime: "2018-10-31 00:00:00"
+reference_datetime: "2018-11-10 00:00:00"
 remotes:
 - "url": "https://github.com/argoneum/argoneum"
   "dir": "argoneum"

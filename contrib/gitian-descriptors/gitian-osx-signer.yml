@@ -6,7 +6,7 @@ architectures:
 - "amd64"
 packages:
 - "faketime"
-reference_datetime: "2018-10-31 00:00:00"
+reference_datetime: "2018-11-10 00:00:00"
 remotes:
 - "url": "https://github.com/argoneum/argoneum-detached-sigs.git"
   "dir": "signature"

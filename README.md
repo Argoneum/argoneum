@@ -1,5 +1,5 @@
-Argoneum Core staging tree 1.0.0
-===============================
+Argoneum Core staging tree 1.1.0
+================================
 
 `master:` [![Build Status](https://travis-ci.org/argoneum/argoneum.svg?branch=master)](https://travis-ci.org/argoneum/argoneum) `develop:` [![Build Status](https://travis-ci.org/argoneum/argoneum.svg?branch=develop)](https://travis-ci.org/argoneum/argoneum/branches)
 
