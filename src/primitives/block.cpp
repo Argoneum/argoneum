@@ -10,12 +10,17 @@
 #include "utilstrencodings.h"
 #include "crypto/common.h"
 #include "crypto/algos/skein.h"
+#include "crypto/algos/phi2.h"
 
 uint256 CBlockHeader::GetHash() const
 {
     uint256 thash;
     uint32_t len = (END(nNonce) - BEGIN(nVersion)) * sizeof(BEGIN(nVersion)[0]);
-    skein_hash(&BEGIN(nVersion)[0], (char *) &thash, len);
+    if (nTime < PHI2_HARDFORK_TIME) {
+        skein_hash(&BEGIN(nVersion)[0], (char *) &thash, len);
+    } else {
+        phi2_hash(BEGIN(nVersion), BEGIN(thash), len);
+    }
     return thash;
 }
 

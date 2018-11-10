@@ -175,6 +175,16 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     if (params.fPowNoRetargeting)
         return pindexLast->nBits;
 
+    // Lowest diff on hardfork
+    int64_t hardforkTime = PHI2_HARDFORK_TIME;
+    int64_t curBlockTime = pblock->GetBlockTime();
+    int64_t lastBlockTime = pindexLast->GetBlockTime();
+    bool firstHFBlock = (curBlockTime >= hardforkTime) && (lastBlockTime <= hardforkTime + 10);
+
+    if (firstHFBlock) {
+        return UintToArith256(params.powLimit).GetCompact();
+    }
+
     // Most recent algo first
     if (pindexLast->nHeight + 1 >= params.nPowDGWHeight) {
         return DarkGravityWave(pindexLast, params);
