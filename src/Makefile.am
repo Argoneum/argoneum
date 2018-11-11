@@ -301,7 +301,13 @@ libbitcoin_wallet_a_SOURCES = \
 # crypto primitives library
 crypto_libbitcoin_crypto_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_CONFIG_INCLUDES) $(PIC_FLAGS)
 crypto_libbitcoin_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(PIC_FLAGS)
+
 crypto_libbitcoin_crypto_a_SOURCES = \
+  $(crypto_libbitcoin_crypto_a_common) \
+  $(crypto_libbitcoin_crypto_a_algos) \
+  $(crypto_libbitcoin_crypto_a_sha3)
+
+crypto_libbitcoin_crypto_a_common = \
   crypto/common.h \
   crypto/hmac_sha256.cpp \
   crypto/hmac_sha256.h \
@@ -316,66 +322,208 @@ crypto_libbitcoin_crypto_a_SOURCES = \
   crypto/sha512.cpp \
   crypto/sha512.h
 
-# x11, x16r
-crypto_libbitcoin_crypto_a_SOURCES += \
-  crypto/blake.c \
-  crypto/bmw.c \
-  crypto/cubehash.c \
-  crypto/echo.c \
-  crypto/groestl.c \
-  crypto/jh.c \
-  crypto/keccak.c \
-  crypto/luffa.c \
-  crypto/shavite.c \
-  crypto/simd.c \
-  crypto/skein.c \
-  crypto/sph_blake.h \
-  crypto/sph_bmw.h \
-  crypto/sph_cubehash.h \
-  crypto/sph_echo.h \
-  crypto/sph_groestl.h \
-  crypto/sph_jh.h \
-  crypto/sph_keccak.h \
-  crypto/sph_luffa.h \
-  crypto/sph_shavite.h \
-  crypto/sph_simd.h \
-  crypto/sph_skein.h \
-  crypto/sph_types.h \
-  crypto/sph_hamsi.h \
-  crypto/sph_hamsi.c \
-  crypto/sph_fugue.h \
-  crypto/sph_fugue.c \
-  crypto/sph_shabal.h \
-  crypto/sph_shabal.c \
-  crypto/sph_whirlpool.h \
-  crypto/sph_whirlpool.c \
-  crypto/sph_sha2.h \
-  crypto/sph_sha2.c \
-  crypto/sph_sha512.c
+crypto_libbitcoin_crypto_a_algos = \
+  crypto/algos/a5a.c \
+  crypto/algos/a5a.h \
+  crypto/algos/a5amath.c \
+  crypto/algos/a5amath.h \
+  crypto/algos/aergo.c \
+  crypto/algos/aergo.h \
+  crypto/algos/allium.c \
+  crypto/algos/allium.h \
+  crypto/algos/bastion.c \
+  crypto/algos/bastion.h \
+  crypto/algos/bitcore.c \
+  crypto/algos/bitcore.h \
+  crypto/algos/blake.c \
+  crypto/algos/blake.h \
+  crypto/algos/blake2s.c \
+  crypto/algos/blake2s.h \
+  crypto/algos/blakecoin.c \
+  crypto/algos/blakecoin.h \
+  crypto/algos/bmw.c \
+  crypto/algos/bmw.h \
+  crypto/algos/c11.c \
+  crypto/algos/c11.h \
+  crypto/algos/common.h \
+  crypto/algos/deep.c \
+  crypto/algos/deep.h \
+  crypto/algos/drop.c \
+  crypto/algos/drop.h \
+  crypto/algos/exosis.c \
+  crypto/algos/exosis.h \
+  crypto/algos/fresh.c \
+  crypto/algos/fresh.h \
+  crypto/algos/gost.c \
+  crypto/algos/gost.h \
+  crypto/algos/groestl.c \
+  crypto/algos/groestl.h \
+  crypto/algos/hex.c \
+  crypto/algos/hex.h \
+  crypto/algos/hive.c \
+  crypto/algos/hive.h \
+  crypto/algos/hmq17.c \
+  crypto/algos/hmq17.h \
+  crypto/algos/hsr14.c \
+  crypto/algos/hsr14.h \
+  crypto/algos/jha.c \
+  crypto/algos/jha.h \
+  crypto/algos/keccak.c \
+  crypto/algos/keccak.h \
+  crypto/algos/lbk3.c \
+  crypto/algos/lbk3.h \
+  crypto/algos/lbry.c \
+  crypto/algos/lbry.h \
+  crypto/algos/luffa.c \
+  crypto/algos/luffa.h \
+  crypto/algos/lyra2-z.c \
+  crypto/algos/lyra2-z.h \
+  crypto/algos/lyra2.c \
+  crypto/algos/lyra2.h \
+  crypto/algos/lyra2re.c \
+  crypto/algos/lyra2re.h \
+  crypto/algos/lyra2v2.c \
+  crypto/algos/lyra2v2.h \
+  crypto/algos/lyra2z.c \
+  crypto/algos/lyra2z.h \
+  crypto/algos/m7m.c \
+  crypto/algos/m7m.h \
+  crypto/algos/magimath.cpp \
+  crypto/algos/magimath.h \
+  crypto/algos/neoscrypt.c \
+  crypto/algos/neoscrypt.h \
+  crypto/algos/nist5.c \
+  crypto/algos/nist5.h \
+  crypto/algos/pentablake.c \
+  crypto/algos/pentablake.h \
+  crypto/algos/phi.c \
+  crypto/algos/phi.h \
+  crypto/algos/phi2.c \
+  crypto/algos/phi2.h \
+  crypto/algos/polytimos.c \
+  crypto/algos/polytimos.h \
+  crypto/algos/pomelo.c \
+  crypto/algos/pomelo.h \
+  crypto/algos/quark.c \
+  crypto/algos/quark.h \
+  crypto/algos/qubit.c \
+  crypto/algos/qubit.h \
+  crypto/algos/rainforest.c \
+  crypto/algos/rainforest.h \
+  crypto/algos/scrypt.c \
+  crypto/algos/scryptn.c \
+  crypto/algos/scryptn.h \
+  crypto/algos/sha256.c \
+  crypto/algos/sha256.h \
+  crypto/algos/sha256_y.c \
+  crypto/algos/sha256_y.h \
+  crypto/algos/sha256t.c \
+  crypto/algos/sha256t.h \
+  crypto/algos/sib.c \
+  crypto/algos/sib.h \
+  crypto/algos/skein.c \
+  crypto/algos/skein.h \
+  crypto/algos/skein2.c \
+  crypto/algos/skein2.h \
+  crypto/algos/skunk.c \
+  crypto/algos/skunk.h \
+  crypto/algos/sm3.c \
+  crypto/algos/sm3.h \
+  crypto/algos/sonoa.c \
+  crypto/algos/sonoa.h \
+  crypto/algos/sponge.c \
+  crypto/algos/sponge.h \
+  crypto/algos/sysendian.h \
+  crypto/algos/timetravel.c \
+  crypto/algos/timetravel.h \
+  crypto/algos/tribus.c \
+  crypto/algos/tribus.h \
+  crypto/algos/veltor.c \
+  crypto/algos/veltor.h \
+  crypto/algos/velvet.c \
+  crypto/algos/velvet.h \
+  crypto/algos/vitalium.c \
+  crypto/algos/vitalium.h \
+  crypto/algos/whirlpool.c \
+  crypto/algos/whirlpool.h \
+  crypto/algos/whirlpoolx.c \
+  crypto/algos/whirlpoolx.h \
+  crypto/algos/x11.c \
+  crypto/algos/x11.h \
+  crypto/algos/x11evo.c \
+  crypto/algos/x11evo.h \
+  crypto/algos/x12.c \
+  crypto/algos/x12.h \
+  crypto/algos/x13.c \
+  crypto/algos/x13.h \
+  crypto/algos/x14.c \
+  crypto/algos/x14.h \
+  crypto/algos/x15.c \
+  crypto/algos/x15.h \
+  crypto/algos/x16r.c \
+  crypto/algos/x16r.h \
+  crypto/algos/x16s.c \
+  crypto/algos/x16s.h \
+  crypto/algos/x17.c \
+  crypto/algos/x17.h \
+  crypto/algos/xevan.c \
+  crypto/algos/xevan.h \
+  crypto/algos/yescrypt-opt.c \
+  crypto/algos/yescrypt-platform.c \
+  crypto/algos/yescrypt.c \
+  crypto/algos/yescrypt.h \
+  crypto/algos/zr5.c \
+  crypto/algos/zr5.h
 
-# lyra2z
-crypto_libbitcoin_crypto_a_SOURCES += \
-  crypto/lyra2z/blake.c \
-  crypto/lyra2z/lyra2.c \
-  crypto/lyra2z/lyra2.h \
-  crypto/lyra2z/lyra2z.c \
-  crypto/lyra2z/lyra2z.h \
-  crypto/lyra2z/sponge.c \
-  crypto/lyra2z/sponge.h \
-  crypto/lyra2z/sph_blake.h \
-  crypto/lyra2z/sph_types.h
+crypto_libbitcoin_crypto_a_sha3 = \
+  crypto/sha3/sph_blake.c \
+  crypto/sha3/sph_blake.h \
+  crypto/sha3/sph_bmw.c \
+  crypto/sha3/sph_bmw.h \
+  crypto/sha3/sph_cubehash.c \
+  crypto/sha3/sph_cubehash.h \
+  crypto/sha3/sph_echo.c \
+  crypto/sha3/sph_echo.h \
+  crypto/sha3/sph_fugue.c \
+  crypto/sha3/sph_fugue.h \
+  crypto/sha3/sph_groestl.c \
+  crypto/sha3/sph_groestl.h \
+  crypto/sha3/sph_hamsi.c \
+  crypto/sha3/sph_hamsi.h \
+  crypto/sha3/sph_haval.c \
+  crypto/sha3/sph_haval.h \
+  crypto/sha3/sph_hefty1.c \
+  crypto/sha3/sph_hefty1.h \
+  crypto/sha3/sph_jh.c \
+  crypto/sha3/sph_jh.h \
+  crypto/sha3/sph_keccak.c \
+  crypto/sha3/sph_keccak.h \
+  crypto/sha3/sph_luffa.c \
+  crypto/sha3/sph_luffa.h \
+  crypto/sha3/sph_ripemd.c \
+  crypto/sha3/sph_ripemd.h \
+  crypto/sha3/sph_sha2.c \
+  crypto/sha3/sph_sha2.h \
+  crypto/sha3/sph_sha2big.c \
+  crypto/sha3/sph_shabal.c \
+  crypto/sha3/sph_shabal.h \
+  crypto/sha3/sph_shavite.c \
+  crypto/sha3/sph_shavite.h \
+  crypto/sha3/sph_simd.c \
+  crypto/sha3/sph_simd.h \
+  crypto/sha3/sph_skein.c \
+  crypto/sha3/sph_skein.h \
+  crypto/sha3/sph_tiger.c \
+  crypto/sha3/sph_tiger.h \
+  crypto/sha3/sph_types.h \
+  crypto/sha3/sph_whirlpool.c \
+  crypto/sha3/sph_whirlpool.h
 
-# skein
-crypto_libbitcoin_crypto_a_SOURCES += \
-  crypto/skein.h \
-  crypto/sha256_y.cpp \
-  crypto/sha256_y.h
-
-# helpers to be #included, not compiled
 EXTRA_DIST = \
-	crypto/aes_helper.c \
-	crypto/md_helper.c \
-	crypto/sph_hamsi_helper.c
+  crypto/sha3/aes_helper.c \
+  crypto/sha3/hamsi_helper.c \
+  crypto/sha3/haval_helper.c \
+  crypto/sha3/md_helper.c
 
 # common: shared between argoneumd, and argoneum-qt and non-server tools
 libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)

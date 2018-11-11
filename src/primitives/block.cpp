@@ -9,34 +9,14 @@
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
-#include "crypto/skein.h"
-#include "crypto/lyra2z/lyra2z.h"
-
-// Define hashing function
-#define HASH_SKEIN
+#include "crypto/algos/skein.h"
 
 uint256 CBlockHeader::GetHash() const
 {
-#ifdef HASH_X11
-    return HashX11(BEGIN(nVersion), END(nNonce));
-#endif
-#ifdef HASH_X16R
-    return HashX16R(BEGIN(nVersion), END(nNonce), hashPrevBlock);
-#endif
-#ifdef HASH_LYRA2Z
-    uint256 thash;
-    lyra2z_hash(BEGIN(nVersion), BEGIN(thash));
-    return thash;
-#endif
-#ifdef HASH_SKEIN
     uint256 thash;
     uint32_t len = (END(nNonce) - BEGIN(nVersion)) * sizeof(BEGIN(nVersion)[0]);
     skein_hash(&BEGIN(nVersion)[0], (char *) &thash, len);
     return thash;
-#endif
-#if !(defined(HASH_X11) || defined(HASH_X16R) || defined(HASH_LYRA2Z) || defined(HASH_SKEIN))
-#error No hashing function defined (HASH_X11 | HASH_X16R | HASH_LYRA2Z | HASH_SKEIN)
-#endif
 }
 
 std::string CBlock::ToString() const
