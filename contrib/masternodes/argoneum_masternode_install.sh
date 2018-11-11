@@ -8,6 +8,13 @@
 #   ETH: 0x26B9dDa0616FE0759273D651e77Fe7dd7751E01E
 #   LTC: LeZmPXHuQEhkd8iZY7a2zVAwF7DCWir2FF
 #
+# If you like the script extensions (visible install, daemon log rotation, sentinel
+# option, the final screen, etc), you may also donate to os (osnwt):
+#   BTC: 1D7nv1AitpNcTBKo2EHxBEN1oNVA7YgQ7H
+#   ETH: 0x1d64Fb3635c0b20d2f081E706aD52703652f0614
+#   LTC: LKh9V4nbD2pae87s5iFitYVp24qyJi5K8k
+#   AGM: MPF5C1g7T8nwayvoVmaC3Z4upAx5xf4skx
+#
 
 RUNAS="root"
 
@@ -41,9 +48,16 @@ NC='\033[0m'
 
 
 function check_system() {
-  if [[ $(lsb_release -d) != *16.04* ]] && [[ $(lsb_release -d) != *17.10* ]] && [[ $(lsb_release -d) != *18.04* ]]; then
-    echo -e "${RED}You are not running Ubuntu 16.04, 17.10 or 18.04. Installation is cancelled.${NC}"
-    exit 1
+  local r=$(lsb_release -d)
+  if [[ $r != *16.04* ]] && [[ $r != *17.10* ]] && [[ $r != *18.04* ]] && [[ $r != *18.10* ]]; then
+    echo -e "${RED}You are not running Ubuntu 16.04, 17.10, 18.04 or 18.10.${NC} Your system version is ${GREEN}$r${NC}."
+    ask_yn "Do you want to try the installation anyway (type ${GREEN}Y${NC} or ${RED}N${NC}): "
+    if [ "$?" = "0" ]; then
+      echo -e "${RED}Installation aborted.${NC}"
+      exit 1
+    else
+      echo -e "${GREEN}Installing on unsupported system. Results may vary.${NC}"
+    fi
   fi
 
   if [[ $EUID -ne 0 ]]; then
@@ -383,6 +397,13 @@ function important_information() {
   echo -e "  BTC: 3MNhbUq5smwMzxjU2UmTfeafPD7ag8kq76"
   echo -e "  ETH: 0x26B9dDa0616FE0759273D651e77Fe7dd7751E01E"
   echo -e "  LTC: LeZmPXHuQEhkd8iZY7a2zVAwF7DCWir2FF"
+  echo
+  echo -e "If you like the script extensions (${GREEN}visible install, daemon log rotation, sentinel, the final screen${NC}),"
+  echo -e "you may also donate to os (${RED}osnwt${NC}):"
+  echo -e "  BTC: 1D7nv1AitpNcTBKo2EHxBEN1oNVA7YgQ7H"
+  echo -e "  ETH: 0x1d64Fb3635c0b20d2f081E706aD52703652f0614"
+  echo -e "  LTC: LKh9V4nbD2pae87s5iFitYVp24qyJi5K8k"
+  echo -e "  AGM: MPF5C1g7T8nwayvoVmaC3Z4upAx5xf4skx"
   echo -e "${GREEN}================================================================================================================================${NC}"
 }
 
