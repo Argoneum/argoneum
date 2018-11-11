@@ -19,6 +19,7 @@
 #include "../sha3/sph_simd.h"
 #include "../sha3/sph_echo.h"
 #endif
+#include "timetravel.h"
 
 #define _ALIGN(x) __attribute__ ((aligned(x)))
 

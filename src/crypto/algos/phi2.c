@@ -19,6 +19,7 @@ void phi2_hash(const char* input, char* output, uint32_t len)
 	unsigned char _ALIGN(128) hash[64];
 	unsigned char _ALIGN(128) hashA[64];
 	unsigned char _ALIGN(128) hashB[64];
+	int i;
 
 	sph_cubehash512_context ctx_cubehash;
 	sph_jh512_context ctx_jh;
@@ -55,7 +56,7 @@ void phi2_hash(const char* input, char* output, uint32_t len)
 	sph_skein512(&ctx_skein, (const void*)hash, 64);
 	sph_skein512_close(&ctx_skein, (void*)hash);
 
-	for (int i=0; i<32; i++)
+	for (i=0; i<32; i++)
 		hash[i] ^= hash[i+32];
 
 	memcpy(output, hash, 32);

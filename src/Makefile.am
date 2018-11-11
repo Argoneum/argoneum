@@ -323,57 +323,15 @@ crypto_libbitcoin_crypto_a_common = \
   crypto/sha512.h
 
 crypto_libbitcoin_crypto_a_algos = \
-  crypto/algos/a5a.c \
-  crypto/algos/a5a.h \
-  crypto/algos/a5amath.c \
-  crypto/algos/a5amath.h \
-  crypto/algos/aergo.c \
-  crypto/algos/aergo.h \
-  crypto/algos/allium.c \
-  crypto/algos/allium.h \
-  crypto/algos/bastion.c \
-  crypto/algos/bastion.h \
-  crypto/algos/bitcore.c \
-  crypto/algos/bitcore.h \
-  crypto/algos/blake.c \
-  crypto/algos/blake.h \
-  crypto/algos/blake2s.c \
-  crypto/algos/blake2s.h \
-  crypto/algos/blakecoin.c \
-  crypto/algos/blakecoin.h \
-  crypto/algos/bmw.c \
-  crypto/algos/bmw.h \
-  crypto/algos/c11.c \
-  crypto/algos/c11.h \
   crypto/algos/common.h \
-  crypto/algos/deep.c \
-  crypto/algos/deep.h \
-  crypto/algos/drop.c \
-  crypto/algos/drop.h \
-  crypto/algos/exosis.c \
-  crypto/algos/exosis.h \
-  crypto/algos/fresh.c \
-  crypto/algos/fresh.h \
   crypto/algos/gost.c \
   crypto/algos/gost.h \
   crypto/algos/groestl.c \
   crypto/algos/groestl.h \
-  crypto/algos/hex.c \
-  crypto/algos/hex.h \
-  crypto/algos/hive.c \
-  crypto/algos/hive.h \
-  crypto/algos/hmq17.c \
-  crypto/algos/hmq17.h \
-  crypto/algos/hsr14.c \
-  crypto/algos/hsr14.h \
-  crypto/algos/jha.c \
-  crypto/algos/jha.h \
   crypto/algos/keccak.c \
   crypto/algos/keccak.h \
   crypto/algos/lbk3.c \
   crypto/algos/lbk3.h \
-  crypto/algos/lbry.c \
-  crypto/algos/lbry.h \
   crypto/algos/luffa.c \
   crypto/algos/luffa.h \
   crypto/algos/lyra2-z.c \
@@ -386,30 +344,14 @@ crypto_libbitcoin_crypto_a_algos = \
   crypto/algos/lyra2v2.h \
   crypto/algos/lyra2z.c \
   crypto/algos/lyra2z.h \
-  crypto/algos/m7m.c \
-  crypto/algos/m7m.h \
-  crypto/algos/magimath.cpp \
-  crypto/algos/magimath.h \
   crypto/algos/neoscrypt.c \
   crypto/algos/neoscrypt.h \
   crypto/algos/nist5.c \
   crypto/algos/nist5.h \
-  crypto/algos/pentablake.c \
-  crypto/algos/pentablake.h \
   crypto/algos/phi.c \
   crypto/algos/phi.h \
   crypto/algos/phi2.c \
   crypto/algos/phi2.h \
-  crypto/algos/polytimos.c \
-  crypto/algos/polytimos.h \
-  crypto/algos/pomelo.c \
-  crypto/algos/pomelo.h \
-  crypto/algos/quark.c \
-  crypto/algos/quark.h \
-  crypto/algos/qubit.c \
-  crypto/algos/qubit.h \
-  crypto/algos/rainforest.c \
-  crypto/algos/rainforest.h \
   crypto/algos/scrypt.c \
   crypto/algos/scryptn.c \
   crypto/algos/scryptn.h \
@@ -429,51 +371,11 @@ crypto_libbitcoin_crypto_a_algos = \
   crypto/algos/skunk.h \
   crypto/algos/sm3.c \
   crypto/algos/sm3.h \
-  crypto/algos/sonoa.c \
-  crypto/algos/sonoa.h \
   crypto/algos/sponge.c \
   crypto/algos/sponge.h \
   crypto/algos/sysendian.h \
-  crypto/algos/timetravel.c \
-  crypto/algos/timetravel.h \
-  crypto/algos/tribus.c \
-  crypto/algos/tribus.h \
-  crypto/algos/veltor.c \
-  crypto/algos/veltor.h \
-  crypto/algos/velvet.c \
-  crypto/algos/velvet.h \
-  crypto/algos/vitalium.c \
-  crypto/algos/vitalium.h \
-  crypto/algos/whirlpool.c \
-  crypto/algos/whirlpool.h \
-  crypto/algos/whirlpoolx.c \
-  crypto/algos/whirlpoolx.h \
   crypto/algos/x11.c \
-  crypto/algos/x11.h \
-  crypto/algos/x11evo.c \
-  crypto/algos/x11evo.h \
-  crypto/algos/x12.c \
-  crypto/algos/x12.h \
-  crypto/algos/x13.c \
-  crypto/algos/x13.h \
-  crypto/algos/x14.c \
-  crypto/algos/x14.h \
-  crypto/algos/x15.c \
-  crypto/algos/x15.h \
-  crypto/algos/x16r.c \
-  crypto/algos/x16r.h \
-  crypto/algos/x16s.c \
-  crypto/algos/x16s.h \
-  crypto/algos/x17.c \
-  crypto/algos/x17.h \
-  crypto/algos/xevan.c \
-  crypto/algos/xevan.h \
-  crypto/algos/yescrypt-opt.c \
-  crypto/algos/yescrypt-platform.c \
-  crypto/algos/yescrypt.c \
-  crypto/algos/yescrypt.h \
-  crypto/algos/zr5.c \
-  crypto/algos/zr5.h
+  crypto/algos/x11.h
 
 crypto_libbitcoin_crypto_a_sha3 = \
   crypto/sha3/sph_blake.c \
