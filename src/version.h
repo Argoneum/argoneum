@@ -10,7 +10,7 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 70209;
+static const int PROTOCOL_VERSION = 70208;
 
 //! hardfork time
 static const int PHI2_HARDFORK_TIME = 1541934671; // 11/11/2018 @ 11:11am (UTC)
