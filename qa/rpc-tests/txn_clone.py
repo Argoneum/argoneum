@@ -1,5 +1,5 @@
-#!/usr/bin/env python2
-# Copyright (c) 2014-2015 The Bitcoin Core developers
+#!/usr/bin/env python3
+# Copyright (c) 2014-2016 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,6 +11,11 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
 
 class TxnMallTest(BitcoinTestFramework):
+
+    def __init__(self):
+        super().__init__()
+        self.num_nodes = 4
+        self.setup_clean_chain = False
 
     def add_options(self, parser):
         parser.add_option("--mineblock", dest="mine_block", default=False, action="store_true",
@@ -44,25 +49,19 @@ class TxnMallTest(BitcoinTestFramework):
         # Coins are sent to node1_address
         node1_address = self.nodes[1].getnewaddress("from0")
 
-        # Send tx1, and another transaction tx2 that won't be cloned
+        # Send tx1, and another transaction tx2 that won't be cloned 
         txid1 = self.nodes[0].sendfrom("foo", node1_address, 400, 0)
         txid2 = self.nodes[0].sendfrom("bar", node1_address, 200, 0)
 
-        # Construct a clone of tx1, to be malleated
+        # Construct a clone of tx1, to be malleated 
         rawtx1 = self.nodes[0].getrawtransaction(txid1,1)
         clone_inputs = [{"txid":rawtx1["vin"][0]["txid"],"vout":rawtx1["vin"][0]["vout"]}]
         clone_outputs = {rawtx1["vout"][0]["scriptPubKey"]["addresses"][0]:rawtx1["vout"][0]["value"],
                          rawtx1["vout"][1]["scriptPubKey"]["addresses"][0]:rawtx1["vout"][1]["value"]}
-        clone_raw = self.nodes[0].createrawtransaction(clone_inputs, clone_outputs)
+        clone_locktime = rawtx1["locktime"]
+        clone_raw = self.nodes[0].createrawtransaction(clone_inputs, clone_outputs, clone_locktime)
 
-        # 3 hex manipulations on the clone are required
-
-        # manipulation 1. sequence is at version+#inputs+input+sigstub
-        posseq = 2*(4+1+36+1)
-        seqbe = '%08x' % rawtx1["vin"][0]["sequence"]
-        clone_raw = clone_raw[:posseq] + seqbe[6:8] + seqbe[4:6] + seqbe[2:4] + seqbe[0:2] + clone_raw[posseq + 8:]
-
-        # manipulation 2. createrawtransaction randomizes the order of its outputs, so swap them if necessary.
+        # createrawtransaction randomizes the order of its outputs, so swap them if necessary.
         # output 0 is at version+#inputs+input+sigstub+sequence+#outputs
         # 400 AGM serialized is 00902f5009000000
         pos0 = 2*(4+1+36+1+4+1)
@@ -73,11 +72,6 @@ class TxnMallTest(BitcoinTestFramework):
             output0 = clone_raw[pos0 : pos0 + output_len]
             output1 = clone_raw[pos0 + output_len : pos0 + 2 * output_len]
             clone_raw = clone_raw[:pos0] + output1 + output0 + clone_raw[pos0 + 2 * output_len:]
-
-        # manipulation 3. locktime is after outputs
-        poslt = pos0 + 2 * output_len
-        ltbe = '%08x' % rawtx1["locktime"]
-        clone_raw = clone_raw[:poslt] + ltbe[6:8] + ltbe[4:6] + ltbe[2:4] + ltbe[0:2] + clone_raw[poslt + 8:]
 
         # Use a different signature hash type to sign.  This creates an equivalent but malleated clone.
         # Don't send the clone anywhere yet
@@ -92,7 +86,7 @@ class TxnMallTest(BitcoinTestFramework):
         tx1 = self.nodes[0].gettransaction(txid1)
         tx2 = self.nodes[0].gettransaction(txid2)
 
-        # Node0's balance should be starting balance, plus 500 AGM for another
+        # Node0's balance should be starting balance, plus 500AGM for another
         # matured block, minus tx1 and tx2 amounts, and minus transaction fees:
         expected = starting_balance + fund_foo_tx["fee"] + fund_bar_tx["fee"]
         if self.options.mine_block: expected += 500
@@ -130,7 +124,7 @@ class TxnMallTest(BitcoinTestFramework):
         tx1 = self.nodes[0].gettransaction(txid1)
         tx1_clone = self.nodes[0].gettransaction(txid1_clone)
         tx2 = self.nodes[0].gettransaction(txid2)
-
+        
         # Verify expected confirmations
         assert_equal(tx1["confirmations"], -2)
         assert_equal(tx1_clone["confirmations"], 2)
@@ -139,7 +133,7 @@ class TxnMallTest(BitcoinTestFramework):
         # Check node0's total balance; should be same as before the clone, + 1000 AGM for 2 matured,
         # less possible orphaned matured subsidy
         expected += 1000
-        if (self.options.mine_block):
+        if (self.options.mine_block): 
             expected -= 500
         assert_equal(self.nodes[0].getbalance(), expected)
         assert_equal(self.nodes[0].getbalance("*", 0), expected)

@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The Dash Core developers
+// Copyright (c) 2014-2017 The Argoneum Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -22,7 +22,7 @@ QList<BitcoinUnits::Unit> BitcoinUnits::availableUnits()
     unitlist.append(AGM);
     unitlist.append(mAGM);
     unitlist.append(uAGM);
-    unitlist.append(args);
+    unitlist.append(duffs);
     return unitlist;
 }
 
@@ -33,7 +33,7 @@ bool BitcoinUnits::valid(int unit)
     case AGM:
     case mAGM:
     case uAGM:
-    case args:
+    case duffs:
         return true;
     default:
         return false;
@@ -49,7 +49,7 @@ QString BitcoinUnits::name(int unit)
             case AGM: return QString("AGM");
             case mAGM: return QString("mAGM");
             case uAGM: return QString::fromUtf8("μAGM");
-            case args: return QString::fromUtf8("args");
+            case duffs: return QString("duffs");
             default: return QString("???");
         }
     }
@@ -60,7 +60,7 @@ QString BitcoinUnits::name(int unit)
             case AGM: return QString("tAGM");
             case mAGM: return QString("mtAGM");
             case uAGM: return QString::fromUtf8("μtAGM");
-            case args: return QString::fromUtf8("args");
+            case duffs: return QString("tduffs");
             default: return QString("???");
         }
     }
@@ -75,7 +75,7 @@ QString BitcoinUnits::description(int unit)
             case AGM: return QString("Argoneum");
             case mAGM: return QString("Milli-Argoneum (1 / 1" THIN_SP_UTF8 "000)");
             case uAGM: return QString("Micro-Argoneum (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case args: return QString("Ten Nano-Argoneum (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case duffs: return QString("Ten Nano-Argoneum (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -86,7 +86,7 @@ QString BitcoinUnits::description(int unit)
             case AGM: return QString("TestArgoneums");
             case mAGM: return QString("Milli-TestArgoneum (1 / 1" THIN_SP_UTF8 "000)");
             case uAGM: return QString("Micro-TestArgoneum (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
-            case args: return QString("Micro-TestArgoneum (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+            case duffs: return QString("Ten Nano-TestArgoneum (1 / 100" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
             default: return QString("???");
         }
     }
@@ -99,7 +99,7 @@ qint64 BitcoinUnits::factor(int unit)
     case AGM:  return 100000000;
     case mAGM: return 100000;
     case uAGM: return 100;
-    case args: return 1;
+    case duffs: return 1;
     default:   return 100000000;
     }
 }
@@ -111,7 +111,7 @@ int BitcoinUnits::decimals(int unit)
     case AGM: return 8;
     case mAGM: return 5;
     case uAGM: return 2;
-    case args: return 0;
+    case duffs: return 0;
     default: return 0;
     }
 }

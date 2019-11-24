@@ -3,13 +3,13 @@ Description=Argoneum's distributed currency daemon
 After=network.target
 
 [Service]
-User=argoneum
-Group=argoneum
+User=argoneumcore
+Group=argoneumcore
 
 Type=forking
 PIDFile=/var/lib/argoneumd/argoneumd.pid
 ExecStart=/usr/bin/argoneumd -daemon -pid=/var/lib/argoneumd/argoneumd.pid \
--conf=/etc/argoneum/argoneum.conf -datadir=/var/lib/argoneumd -disablewallet
+-conf=/etc/argoneumcore/argoneum.conf -datadir=/var/lib/argoneumd -disablewallet
 
 Restart=always
 PrivateTmp=true

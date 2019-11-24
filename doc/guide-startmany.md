@@ -8,7 +8,7 @@
 2. Click the Receive tab.
 3. Fill in the form to request a payment.
     * Label: mn01
-    * Amount: 10000 (optional)
+    * Amount: 1000 (optional)
     * Click *Request payment* button
 5. Click the *Copy Address* button
 
@@ -16,9 +16,9 @@ Create a new wallet address for each Masternode.
 
 Close your QT Wallet.
 
-### Send 10000 AGM to New Addresses
+### Send 1000 AGM to New Addresses
 
-Send exactly 10000 AGM to each new address created above.
+Send exactly 1000 AGM to each new address created above.
 
 ### Create New Masternode Private Keys
 
@@ -38,9 +38,9 @@ Remember... this is local. Make sure your QT is not running.
 
 Create the `masternode.conf` file in the same directory as your `wallet.dat`.
 
-Copy the masternode private key and correspondig collateral output transaction that holds the 10000 AGM.
+Copy the masternode private key and correspondig collateral output transaction that holds the 1000 AGM.
 
-*Note: The masternode priviate key is **not** the same as a wallet private key. **Never** put your wallet private key in the masternode.conf file. That is almost equivalent to putting your 10000 AGM on the remote server and defeats the purpose of a hot/cold setup.*
+*Note: The masternode priviate key is **not** the same as a wallet private key. **Never** put your wallet private key in the masternode.conf file. That is almost equivalent to putting your 1000 AGM on the remote server and defeats the purpose of a hot/cold setup.*
 
 ### Get the collateral output
 
@@ -64,8 +64,8 @@ alias ipaddress:port masternode_private_key collateral_output collateral_output_
 Example:
 
 ```
-mn01 127.0.0.1:9898 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0
-mn02 127.0.0.2:9898 93WaAb3htPJEV8E9aQcN23Jt97bPex7YvWfgMDTUdWJvzmrMqey aa9f1034d973377a5e733272c3d0eced1de22555ad45d6b24abadff8087948d4 0
+mn01 127.0.0.1:9999 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0
+mn02 127.0.0.2:9999 93WaAb3htPJEV8E9aQcN23Jt97bPex7YvWfgMDTUdWJvzmrMqey aa9f1034d973377a5e733272c3d0eced1de22555ad45d6b24abadff8087948d4 0
 ```
 
 ## Update argoneum.conf on server
@@ -74,7 +74,7 @@ If you generated a new masternode private key, you will need to update the remot
 
 Shut down the daemon and then edit the file.
 
-```nano .argoneum/argoneum.conf```
+```nano .argoneumcore/argoneum.conf```
 
 ### Edit the masternodeprivkey
 If you generated a new masternode private key, you will need to update the `masternodeprivkey` value in your remote `argoneum.conf` file.
@@ -83,13 +83,13 @@ If you generated a new masternode private key, you will need to update the `mast
 
 ### Remote
 
-If your remote server is not running, start your remote daemon as you normally would.
+If your remote server is not running, start your remote daemon as you normally would. 
 
 You can confirm that remote server is on the correct block by issuing
 
 ```argoneum-cli getinfo```
 
-and comparing with the official explorer at https://explorer.argoneum.net/chain/Argoneum
+and comparing with the official explorer at https://explorer.argoneum.org/chain/Argoneum
 
 ### Local
 
@@ -105,7 +105,7 @@ If you want to review your `masternode.conf` setting before starting Masternodes
 
 Give it the eye-ball test. If satisfied, you can start your Masternodes one of two ways.
 
-1. `masternode start-alias [alias_from_masternode.conf]`
+1. `masternode start-alias [alias_from_masternode.conf]`  
 Example ```masternode start-alias mn01```
 2. `masternode start-many`
 
@@ -120,7 +120,7 @@ argoneum-cli masternode status
 {
     "outpoint" : "<collateral_output>-<collateral_output_index>",
     "service" : "<ipaddress>:<port>",
-    "pubkey" : "<10000 AGM address>",
+    "pubkey" : "<1000 AGM address>",
     "status" : "Masternode successfully started"
 }
 ```

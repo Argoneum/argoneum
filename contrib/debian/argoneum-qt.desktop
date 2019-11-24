@@ -1,7 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Argoneum
+Name=Argoneum Core
 Comment=Argoneum P2P Cryptocurrency
+Comment[de]=Verbinde mit dem Argoneum peer-to-peer Netzwerk
 Comment[fr]=Argoneum, monnaie virtuelle cryptographique pair à pair
 Comment[tr]=Argoneum, eşten eşe kriptografik sanal para birimi
 Exec=argoneum-qt %u

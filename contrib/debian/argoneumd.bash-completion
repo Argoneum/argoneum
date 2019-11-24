@@ -1,1 +1,2 @@
 contrib/argoneumd.bash-completion	argoneumd
+contrib/argoneum-cli.bash-completion    argoneum-cli

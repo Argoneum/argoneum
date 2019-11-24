@@ -1,7 +1,7 @@
 # /etc/conf.d/argoneumd: config file for /etc/init.d/argoneumd
 
 # Config file location
-#BITCOIND_CONFIGFILE="/etc/argoneum/argoneum.conf"
+#BITCOIND_CONFIGFILE="/etc/argoneumcore/argoneum.conf"
 
 # What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
 #BITCOIND_PIDDIR="/var/run/argoneumd"
@@ -13,8 +13,8 @@
 #BITCOIND_DATADIR="/var/lib/argoneumd"
 
 # User and group to own argoneumd process
-#BITCOIND_USER="argoneum"
-#BITCOIND_GROUP="argoneum"
+#BITCOIND_USER="argoneumcore"
+#BITCOIND_GROUP="argoneumcore"
 
 # Path to argoneumd executable
 #BITCOIND_BIN="/usr/bin/argoneumd"
@@ -23,7 +23,7 @@
 #BITCOIND_NICE=0
 
 # Additional options (avoid -conf and -datadir, use flags above)
-BITCOIND_OPTS="-disablewallet"
+#BITCOIND_OPTS=""
 
 # The timeout in seconds OpenRC will wait for bitcoind to terminate
 # after a SIGTERM has been raised.

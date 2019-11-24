@@ -1,3 +1,2 @@
-debian/manpages/argoneumd.1
-debian/manpages/argoneum.conf.5
-debian/manpages/argoneum-cli.1
+doc/man/argoneumd.1
+doc/man/argoneum-cli.1

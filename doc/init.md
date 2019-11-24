@@ -53,11 +53,11 @@ see `contrib/debian/examples/argoneum.conf`.
 
 All three configurations assume several paths that might need to be adjusted.
 
-Binary:              `/usr/bin/argoneumd`
-Configuration file:  `/etc/argoneum/argoneum.conf`
-Data directory:      `/var/lib/argoneumd`
-PID file:            `/var/run/argoneumd/argoneumd.pid` (OpenRC and Upstart) or `/var/lib/argoneumd/argoneumd.pid` (systemd)
-Lock file:           `/var/lock/subsys/argoneumd` (CentOS)
+Binary:              `/usr/bin/argoneumd`  
+Configuration file:  `/etc/argoneumcore/argoneum.conf`  
+Data directory:      `/var/lib/argoneumd`  
+PID file:            `/var/run/argoneumd/argoneumd.pid` (OpenRC and Upstart) or `/var/lib/argoneumd/argoneumd.pid` (systemd)  
+Lock file:           `/var/lock/subsys/argoneumd` (CentOS)  
 
 The configuration file, PID directory (if applicable) and data directory
 should all be owned by the argoneumcore user and group.  It is advised for security
@@ -67,10 +67,10 @@ can then be controlled by group membership.
 
 3b) Mac OS X
 
-Binary:              `/usr/local/bin/argoneumd`
-Configuration file:  `~/Library/Application Support/Argoneum/argoneum.conf`
-Data directory:      `~/Library/Application Support/Argoneum`
-Lock file:           `~/Library/Application Support/Argoneum/.lock`
+Binary:              `/usr/local/bin/argoneumd`  
+Configuration file:  `~/Library/Application Support/ArgoneumCore/argoneum.conf`  
+Data directory:      `~/Library/Application Support/ArgoneumCore`
+Lock file:           `~/Library/Application Support/ArgoneumCore/.lock`
 
 4. Installing Service Configuration
 -----------------------------------
@@ -104,7 +104,7 @@ use old versions of Upstart and do not supply the start-stop-daemon utility.
 Copy argoneumd.init to /etc/init.d/argoneumd. Test by running `service argoneumd start`.
 
 Using this script, you can adjust the path and flags to the argoneumd program by
-setting the ARGONEUMD and FLAGS environment variables in the file
+setting the AGMD and FLAGS environment variables in the file
 /etc/sysconfig/argoneumd. You can also use the DAEMONOPTS environment variable here.
 
 4e) Mac OS X

@@ -8,6 +8,7 @@
         <file alias="fr">locale/argoneum_fr.qm</file>
         <file alias="it">locale/argoneum_it.qm</file>
         <file alias="ja">locale/argoneum_ja.qm</file>
+        <file alias="nl">locale/argoneum_nl.qm</file>
         <file alias="pl">locale/argoneum_pl.qm</file>
         <file alias="pt">locale/argoneum_pt.qm</file>
         <file alias="ru">locale/argoneum_ru.qm</file>

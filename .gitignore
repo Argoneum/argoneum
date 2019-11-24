@@ -62,7 +62,6 @@ libconftest.dylib*
 *.o
 *.o-*
 *.patch
-.argoneum
 *.a
 *.pb.cc
 *.pb.h
@@ -108,13 +107,8 @@ coverage_percent.txt
 linux-coverage-build
 linux-build
 win32-build
-qa/pull-tester/run-bitcoind-for-test.sh
 qa/pull-tester/tests_config.py
-qa/pull-tester/cache/*
-qa/pull-tester/test.*/*
-qa/tmp
-cache/
-share/BitcoindComparisonTool.jar
+qa/cache/*
 
 !src/leveldb*/Makefile
 
@@ -123,7 +117,8 @@ share/BitcoindComparisonTool.jar
 .autotools
 /doc/doxygen/
 
-src/libargoneumconsensus.pc
+libargoneumconsensus.pc
+contrib/devtools/split-debug.sh
 src/qt/argoneum-qt.bash
 qa/pull-tester/tests-config.sh
 
@@ -133,4 +128,8 @@ argoneumd
 argoneum-qt
 make
 
-/TMP
+/docker/bin
+
+# CLion
+.idea
+cmake-build-debug

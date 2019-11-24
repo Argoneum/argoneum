@@ -1,5 +1,5 @@
 ---
-name: "bitcoin-win-signer"
+name: "argoneum-win-signer"
 suites:
 - "trusty"
 architectures:
@@ -7,7 +7,6 @@ architectures:
 packages:
 - "libssl-dev"
 - "autoconf"
-reference_datetime: "2018-11-10 00:00:00"
 remotes:
 - "url": "https://github.com/argoneum/argoneum-detached-sigs.git"
   "dir": "signature"

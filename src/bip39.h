@@ -21,8 +21,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef ARGONEUM_BIP39_H
-#define ARGONEUM_BIP39_H
+#ifndef AGM_BIP39_H
+#define AGM_BIP39_H
 
 #include "support/allocators/secure.h"
 

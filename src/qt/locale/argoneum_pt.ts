@@ -757,8 +757,8 @@ Endereço: %4
         <translation>média-alta</translation>
     </message>
     <message>
-        <source>Can vary +/- %1 arg(s) per input.</source>
-        <translation>Pode variar +/- %1 arg(s) por input</translation>
+        <source>Can vary +/- %1 duff(s) per input.</source>
+        <translation>Pode variar +/- %1 duff(s) por input</translation>
     </message>
     <message>
         <source>n/a</source>
@@ -2732,10 +2732,6 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>Os programadores Bitcoin Core</translation>
     </message>
     <message>
-        <source>The Dash Core developers</source>
-        <translation>Os programadores Dash Core</translation>
-    </message>
-    <message>
         <source>The Argoneum Core developers</source>
         <translation>Os programadores Argoneum Core</translation>
     </message>
@@ -3378,8 +3374,8 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>Não foi possível localizar fundos Darksend denominados suficientes para esta transacção.</translation>
     </message>
     <message>
-        <source>Unable to locate enough Darksend non-denominated funds for this transaction that are not equal 10000 AGM.</source>
-        <translation>Não foi possível localizar fundos Darksend não denominados suficientes para esta transacção que não sejam igual a 10000 AGM.</translation>
+        <source>Unable to locate enough Darksend non-denominated funds for this transaction that are not equal 1000 AGM.</source>
+        <translation>Não foi possível localizar fundos Darksend não denominados suficientes para esta transacção que não sejam igual a 1000DRK.</translation>
     </message>
     <message>
         <source>Warning: -paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>
@@ -3642,8 +3638,8 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>Este produto inclui software desenvolvido pelo Projecto OpenSSL para uso no OpenSSL Toolkit &lt;https://www.openssl.org/&gt;, software criptográfico escrito por Eric Young e software UPnP escrito por Thomas Bernard.</translation>
     </message>
     <message>
-        <source>Unable to locate enough funds for this transaction that are not equal 10000 AGM.</source>
-        <translation>Não foi possível localizar fundos suficientes para esta transacção que não sejam igual a 10000 AGM.</translation>
+        <source>Unable to locate enough funds for this transaction that are not equal 1000 AGM.</source>
+        <translation>Não foi possível localizar fundos suficientes para esta transacção que não sejam igual a 1000DRK.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
@@ -3658,8 +3654,8 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>Aviso: Por favor verifique que a data e a hora do computador está correcta! Se o relógio estiver errado o Argoneum Core não vai funcionar correctamente.</translation>
     </message>
     <message>
-        <source>(9898 could be used only on mainnet)</source>
-        <translation>(9898 apenas pode ser usado para mainnet)</translation>
+        <source>(9999 could be used only on mainnet)</source>
+        <translation>(9999 apenas pode ser usado para mainnet)</translation>
     </message>
     <message>
         <source>(default: %s)</source>
@@ -3700,12 +3696,8 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>Copyright (C) 2009-%i The Bitcoin Core Developers</translation>
     </message>
     <message>
-        <source>Copyright (C) 2014-%i The Dash Core developers</source>
-        <translation>Copyright (C) 2014-%i Dash Core developers</translation>
-    </message>
-    <message>
-        <source>Copyright (C) 2018-%i The Argoneum Core developers</source>
-        <translation>Copyright (C) 2018-%i Argoneum Core Developers</translation>
+        <source>Copyright (C) 2014-%i The Argoneum Core Developers</source>
+        <translation>Copyright (C) 2014-%i Argoneum Core Developers</translation>
     </message>
     <message>
         <source>Could not parse -rpcbind value %s as network address</source>
@@ -4072,8 +4064,8 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>masternodeprivkey inválida. Por favor reveja a documentação.</translation>
     </message>
     <message>
-        <source>(must be 9898 for mainnet)</source>
-        <translation>(deve ser 9898 para mainnet)</translation>
+        <source>(must be 9999 for mainnet)</source>
+        <translation>(deve ser 9999 para mainnet)</translation>
     </message>
     <message>
         <source>Can't find random Masternode.</source>

@@ -1,19 +1,19 @@
 #!/sbin/runscript
 
-# backward compatibility for existing gentoo layout
+# backward compatibility for existing gentoo layout 
 #
-if [ -d "/var/lib/argoneum/.argoneum" ]; then
-	BITCOIND_DEFAULT_DATADIR="/var/lib/argoneum/.argoneum"
+if [ -d "/var/lib/argoneumcore/.argoneumcore" ]; then
+	BITCOIND_DEFAULT_DATADIR="/var/lib/argoneumcore/.argoneumcore"
 else
 	BITCOIND_DEFAULT_DATADIR="/var/lib/argoneumd"
 fi
 
-BITCOIND_CONFIGFILE=${BITCOIND_CONFIGFILE:-/etc/argoneum/argoneum.conf}
+BITCOIND_CONFIGFILE=${BITCOIND_CONFIGFILE:-/etc/argoneumcore/argoneum.conf}
 BITCOIND_PIDDIR=${BITCOIND_PIDDIR:-/var/run/argoneumd}
 BITCOIND_PIDFILE=${BITCOIND_PIDFILE:-${BITCOIND_PIDDIR}/argoneumd.pid}
 BITCOIND_DATADIR=${BITCOIND_DATADIR:-${BITCOIND_DEFAULT_DATADIR}}
-BITCOIND_USER=${BITCOIND_USER:-${BITCOIN_USER:-argoneum}}
-BITCOIND_GROUP=${BITCOIND_GROUP:-argoneum}
+BITCOIND_USER=${BITCOIND_USER:-${BITCOIN_USER:-argoneumcore}}
+BITCOIND_GROUP=${BITCOIND_GROUP:-argoneumcore}
 BITCOIND_BIN=${BITCOIND_BIN:-/usr/bin/argoneumd}
 BITCOIND_NICE=${BITCOIND_NICE:-${NICELEVEL:-0}}
 BITCOIND_OPTS="${BITCOIND_OPTS:-${BITCOIN_OPTS}}"

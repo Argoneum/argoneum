@@ -2140,10 +2140,6 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>Bitcoin Core-utvecklarna</translation>
     </message>
     <message>
-        <source>The Dash Core developers</source>
-        <translation>Dash Core-utvecklarna</translation>
-    </message>
-    <message>
         <source>The Argoneum Core developers</source>
         <translation>Argoneum Core-utvecklarna</translation>
     </message>
@@ -2730,8 +2726,8 @@ https://www.transifex.com/projects/p/argoneum/</translation>
         <translation>Kunde inte hitta tillräckliga Darksend-denominationsmedel för denna transaktion.</translation>
     </message>
     <message>
-        <source>Unable to locate enough Darksend non-denominated funds for this transaction that are not equal 10000 AGM.</source>
-        <translation>Kunde inte hitta tillräckliga Darksend-icke-denominationsmedel för denna transaktion som inte är likvärdiga 10000 AGM.</translation>
+        <source>Unable to locate enough Darksend non-denominated funds for this transaction that are not equal 1000 AGM.</source>
+        <translation>Kunde inte hitta tillräckliga Darksend-icke-denominationsmedel för denna transaktion som inte är likvärdiga 1000 AGM.</translation>
     </message>
     <message>
         <source>Warning: -paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>

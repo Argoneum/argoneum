@@ -15,8 +15,6 @@
 
 #include <assert.h>
 #include <stdint.h>
-
-#include <boost/foreach.hpp>
 #include <unordered_map>
 
 /**
@@ -56,20 +54,20 @@ public:
     }
 
     template<typename Stream>
-    void Serialize(Stream &s, int nType, int nVersion) const {
+    void Serialize(Stream &s) const {
         assert(!IsSpent());
         uint32_t code = nHeight * 2 + fCoinBase;
-        ::Serialize(s, VARINT(code), nType, nVersion);
-        ::Serialize(s, CTxOutCompressor(REF(out)), nType, nVersion);
+        ::Serialize(s, VARINT(code));
+        ::Serialize(s, CTxOutCompressor(REF(out)));
     }
 
     template<typename Stream>
-    void Unserialize(Stream &s, int nType, int nVersion) {
+    void Unserialize(Stream &s) {
         uint32_t code = 0;
-        ::Unserialize(s, VARINT(code), nType, nVersion);
+        ::Unserialize(s, VARINT(code));
         nHeight = code >> 1;
         fCoinBase = code & 1;
-        ::Unserialize(s, REF(CTxOutCompressor(out)), nType, nVersion);
+        ::Unserialize(s, REF(CTxOutCompressor(out)));
     }
 
     bool IsSpent() const {
@@ -197,7 +195,7 @@ class CCoinsViewCache : public CCoinsViewBacked
 protected:
     /**
      * Make mutable so that we can "fill the cache" even from Get-methods
-     * declared as "const".
+     * declared as "const".  
      */
     mutable uint256 hashBlock;
     mutable CCoinsMap cacheCoins;
@@ -269,7 +267,7 @@ public:
     //! Calculate the size of the cache (in bytes)
     size_t DynamicMemoryUsage() const;
 
-    /**
+    /** 
      * Amount of argoneum coming in to a transaction
      * Note that lightweight clients may not know anything besides the hash of previous transactions,
      * so may not be able to calculate this.
