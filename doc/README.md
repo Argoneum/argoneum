@@ -1,4 +1,4 @@
-Argoneum Core 0.12.1
+Argoneum Core 0.13.0
 =====================
 
 This is the official reference wallet for Argoneum digital currency and comprises the backbone of the Argoneum peer-to-peer network. You can [download Argoneum Core](https://www.argoneum.org/downloads/) or [build it yourself](#building) using the guides below.
@@ -24,7 +24,7 @@ Drag Argoneum-Qt to your applications folder, and then run Argoneum-Qt.
 
 ### Need Help?
 
-* See the [Argoneum documentation](https://argoneum.atlassian.net/wiki/display/DOC)
+* See the [Argoneum documentation](https://docs.argoneum.org)
 for help and more information.
 * Ask for help on [Argoneum Nation Discord](http://argoneumchat.org)
 * Ask for help on the [Argoneum Forum](https://argoneum.org/forum)

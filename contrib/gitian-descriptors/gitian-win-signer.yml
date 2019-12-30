@@ -1,7 +1,7 @@
 ---
 name: "argoneum-win-signer"
 suites:
-- "trusty"
+- "bionic"
 architectures:
 - "amd64"
 packages:

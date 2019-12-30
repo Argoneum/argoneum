@@ -1,4 +1,4 @@
-Argoneum Core 0.12.1
+Argoneum Core 0.13.0
 =====================
 
 Intro
@@ -18,6 +18,6 @@ However, it downloads and stores the entire history of Argoneum transactions;
 depending on the speed of your computer and network connection, the synchronization
 process can take anywhere from a few hours to a day or more.
 
-See the argoneum wiki at:
-  https://argoneum.atlassian.net/wiki/
+See the Argoneum documentation at:
+  https://docs.argoneum.org
 for more help and information.

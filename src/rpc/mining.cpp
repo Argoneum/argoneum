@@ -28,6 +28,10 @@
 #include "masternode-payments.h"
 #include "masternode-sync.h"
 
+#include "evo/deterministicmns.h"
+#include "evo/specialtx.h"
+#include "evo/cbtx.h"
+
 #include <memory>
 #include <stdint.h>
 
@@ -100,6 +104,7 @@ UniValue getnetworkhashps(const JSONRPCRequest& request)
     return GetNetworkHashPS(request.params.size() > 0 ? request.params[0].get_int() : 120, request.params.size() > 1 ? request.params[1].get_int() : -1);
 }
 
+#if ENABLE_MINER
 UniValue generateBlocks(boost::shared_ptr<CReserveScript> coinbaseScript, int nGenerate, uint64_t nMaxTries, bool keepScript)
 {
     static const int nInnerLoopCount = 0x10000;
@@ -218,6 +223,7 @@ UniValue generatetoaddress(const JSONRPCRequest& request)
 
     return generateBlocks(coinbaseScript, nGenerate, nMaxTries, false);
 }
+#endif // ENABLE_MINER
 
 UniValue getmininginfo(const JSONRPCRequest& request)
 {
@@ -385,11 +391,14 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
             "  \"sizelimit\" : n,                  (numeric) limit of block size\n"
             "  \"curtime\" : ttt,                  (numeric) current timestamp in seconds since epoch (Jan 1 1970 GMT)\n"
             "  \"bits\" : \"xxxxxxxx\",              (string) compressed target of next block\n"
+            "  \"previousbits\" : \"xxxxxxxx\",      (string) compressed target of current highest block\n"
             "  \"height\" : n                      (numeric) The height of the next block\n"
-            "  \"masternode\" : {                  (json object) required masternode payee that must be included in the next block\n"
-            "      \"payee\" : \"xxxx\",             (string) payee address\n"
-            "      \"script\" : \"xxxx\",            (string) payee scriptPubKey\n"
-            "      \"amount\": n                   (numeric) required amount to pay\n"
+            "  \"masternode\" : [                  (array) required masternode payments that must be included in the next block\n"
+            "      {\n"
+            "         \"payee\" : \"xxxx\",          (string) payee address\n"
+            "         \"script\" : \"xxxx\",         (string) payee scriptPubKey\n"
+            "         \"amount\": n                (numeric) required amount to pay\n"
+            "      }\n"
             "  },\n"
             "  \"masternode_payments_started\" :  true|false, (boolean) true, if masternode payments started\n"
             "  \"masternode_payments_enforced\" : true|false, (boolean) true, if masternode payments are enforced\n"
@@ -402,7 +411,8 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
             "      ,...\n"
             "  ],\n"
             "  \"superblocks_started\" : true|false, (boolean) true, if superblock payments started\n"
-            "  \"superblocks_enabled\" : true|false  (boolean) true, if superblock payments are enabled\n"
+            "  \"superblocks_enabled\" : true|false, (boolean) true, if superblock payments are enabled\n"
+            "  \"coinbase_payload\" : \"xxxxxxxx\"    (string) coinbase transaction payload data encoded in hexadecimal\n"
             "}\n"
 
             "\nExamples:\n"
@@ -490,10 +500,10 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     }
 
     // when enforcement is on we need information about a masternode payee or otherwise our block is going to be orphaned by the network
-    CScript payee;
+    std::vector<CTxOut> voutMasternodePayments;
     if (sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)
         && !masternodeSync.IsWinnersListSynced()
-        && !mnpayments.GetBlockPayee(chainActive.Height() + 1, payee))
+        && !mnpayments.GetBlockTxOuts(chainActive.Height() + 1, 0, voutMasternodePayments))
             throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Argoneum Core is downloading masternode winners...");
 
     // next bock is a superblock and we need governance info to correctly construct it
@@ -698,7 +708,8 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("sizelimit", (int64_t)MaxBlockSize(fDIP0001ActiveAtTip)));
     result.push_back(Pair("curtime", pblock->GetBlockTime()));
     result.push_back(Pair("bits", strprintf("%08x", pblock->nBits)));
-    result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight + 1)));
+    result.push_back(Pair("previousbits", strprintf("%08x", pblocktemplate->nPrevBits)));
+    result.push_back(Pair("height", (int64_t)(pindexPrev->nHeight+1)));
 
     CAmount founderPayment = GetFounderPayment(pindexPrev->nHeight + 1, blockValue);
     if (founderPayment > 0) {
@@ -709,22 +720,26 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
         result.push_back(Pair("founder_reward_enforced", true));
     }
 
-    UniValue masternodeObj(UniValue::VOBJ);
-    if(pblock->txoutMasternode != CTxOut()) {
+    UniValue masternodeObj(UniValue::VARR);
+    for (const auto& txout : pblocktemplate->voutMasternodePayments) {
         CTxDestination address1;
-        ExtractDestination(pblock->txoutMasternode.scriptPubKey, address1);
+        ExtractDestination(txout.scriptPubKey, address1);
         CBitcoinAddress address2(address1);
-        masternodeObj.push_back(Pair("payee", address2.ToString().c_str()));
-        masternodeObj.push_back(Pair("script", HexStr(pblock->txoutMasternode.scriptPubKey)));
-        masternodeObj.push_back(Pair("amount", pblock->txoutMasternode.nValue));
+
+        UniValue obj(UniValue::VOBJ);
+        obj.push_back(Pair("payee", address2.ToString().c_str()));
+        obj.push_back(Pair("script", HexStr(txout.scriptPubKey)));
+        obj.push_back(Pair("amount", txout.nValue));
+        masternodeObj.push_back(obj);
     }
+
     result.push_back(Pair("masternode", masternodeObj));
     result.push_back(Pair("masternode_payments_started", pindexPrev->nHeight + 1 > consensusParams.nMasternodePaymentsStartBlock));
-    result.push_back(Pair("masternode_payments_enforced", sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
+    result.push_back(Pair("masternode_payments_enforced", deterministicMNManager->IsDeterministicMNsSporkActive() || sporkManager.IsSporkActive(SPORK_8_MASTERNODE_PAYMENT_ENFORCEMENT)));
 
     UniValue superblockObjArray(UniValue::VARR);
-    if(pblock->voutSuperblock.size()) {
-        for (const auto& txout : pblock->voutSuperblock) {
+    if(pblocktemplate->voutSuperblockPayments.size()) {
+        for (const auto& txout : pblocktemplate->voutSuperblockPayments) {
             UniValue entry(UniValue::VOBJ);
             CTxDestination address1;
             ExtractDestination(txout.scriptPubKey, address1);
@@ -738,6 +753,8 @@ UniValue getblocktemplate(const JSONRPCRequest& request)
     result.push_back(Pair("superblock", superblockObjArray));
     result.push_back(Pair("superblocks_started", pindexPrev->nHeight + 1 > consensusParams.nSuperblockStartBlock));
     result.push_back(Pair("superblocks_enabled", sporkManager.IsSporkActive(SPORK_9_SUPERBLOCKS_ENABLED)));
+
+    result.push_back(Pair("coinbase_payload", HexStr(pblock->vtx[0]->vExtraPayload)));
 
     return result;
 }
@@ -967,9 +984,10 @@ static const CRPCCommand commands[] =
     { "mining",             "getblocktemplate",       &getblocktemplate,       true,  {"template_request"} },
     { "mining",             "submitblock",            &submitblock,            true,  {"hexdata","parameters"} },
 
+#if ENABLE_MINER
     { "generating",         "generate",               &generate,               true,  {"nblocks","maxtries"} },
     { "generating",         "generatetoaddress",      &generatetoaddress,      true,  {"nblocks","address","maxtries"} },
-
+#endif // ENABLE_MINER
     { "util",               "estimatefee",            &estimatefee,            true,  {"nblocks"} },
     { "util",               "estimatepriority",       &estimatepriority,       true,  {"nblocks"} },
     { "util",               "estimatesmartfee",       &estimatesmartfee,       true,  {"nblocks"} },

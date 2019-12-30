@@ -6,6 +6,7 @@
 #include "primitives/block.h"
 
 #include "hash.h"
+#include "streams.h"
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
@@ -14,6 +15,12 @@
 
 uint256 CBlockHeader::GetHash() const
 {
+    // FIXME
+    //std::vector<unsigned char> vch(80);
+    //CVectorWriter ss(SER_NETWORK, PROTOCOL_VERSION, vch, 0);
+    //ss << *this;
+    //return HashX11((const char *)vch.data(), (const char *)vch.data() + vch.size());
+
     uint256 thash;
     uint32_t len = (END(nNonce) - BEGIN(nVersion)) * sizeof(BEGIN(nVersion)[0]);
     if (nTime < PHI2_HARDFORK_TIME) {

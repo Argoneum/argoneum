@@ -1,3 +1,20 @@
+Argoneum Core staging tree 1.3.3.0
+==================================
+
+Updated to Dash core v0.13.3.0.
+
+WARNING: this release uses new masternode options (DIP0003). Do not upgrade unless
+prepared to manually update your masternodes. If you use a hosting platform, make
+sure that they support DIP0003 masternodes, particularly, masternodeblsprivkey
+configuration option.
+
+More info on masternode updates:
+ - https://docs.dash.org/en/stable/masternodes/setup.html
+ - https://docs.dash.org/en/stable/masternodes/understanding.html#dip3-changes
+ - https://docs.dash.org/en/0.13.0/masternodes/dip3-upgrade.html
+
+
+
 Argoneum Core staging tree 1.2.3.4
 ==================================
 
