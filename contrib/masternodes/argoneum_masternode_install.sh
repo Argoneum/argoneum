@@ -34,7 +34,7 @@ COIN_CLI="${coin_name}-cli"
 TMP_FOLDER=$(mktemp -d)
 COIN_PATH='/usr/local/bin/'
 KERN_ARCH=$(getconf LONG_BIT)
-COIN_TGZ="https://github.com/argoneum/argoneum/releases/download/v1.2.3.4/argoneum-1.2.3-linux${KERN_ARCH}.tar.gz"
+COIN_TGZ="https://github.com/argoneum/argoneum/releases/download/v1.3.3.0/argoneum-1.3.3-linux${KERN_ARCH}.tar.gz"
 COIN_ZIP=$(echo $COIN_TGZ | awk -F'/' '{print $NF}')
 
 NODEIP=$(curl -s4 icanhazip.com)
@@ -122,7 +122,7 @@ function prepare_system() {
     sudo ufw git wget curl make automake autoconf build-essential libtool pkg-config libssl-dev \
     libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
     libboost-system-dev libboost-test-dev libboost-thread-dev libdb4.8-dev bsdmainutils \
-    libdb4.8++-dev libminiupnpc-dev libgmp3-dev libevent-dev libdb5.3++ unzip libzmq5
+    libdb4.8++-dev libminiupnpc-dev libgmp3-dev libevent-dev libdb5.3++ unzip libzmq5 jq
   if [ "$?" -gt "0" ]; then
     echo -e "${RED}Not all required packages were installed properly. Try to install them manually by running the following commands:${NC}\n"
     echo "apt-get update"
@@ -132,7 +132,7 @@ function prepare_system() {
     echo "apt-get install sudo ufw git wget curl make automake autoconf build-essential libtool pkg-config libssl-dev \
       libboost-dev libboost-chrono-dev libboost-filesystem-dev libboost-program-options-dev \
       libboost-system-dev libboost-test-dev libboost-thread-dev libdb4.8-dev bsdmainutils \
-      libdb4.8++-dev libminiupnpc-dev libgmp3-dev libevent-dev libdb5.3++ unzip libzmq5"
+      libdb4.8++-dev libminiupnpc-dev libgmp3-dev libevent-dev libdb5.3++ unzip libzmq5 jq"
     exit 1
   fi
 }
@@ -207,19 +207,35 @@ EOF
 function create_key() {
   echo -e "Enter your ${RED}$COIN_NAME Masternode Private Key${NC}. Leave it blank to generate a new ${RED}Masternode Private Key${NC} for you:"
   read -e COINKEY
-  if [[ -z "$COINKEY" ]]; then
+  echo -e "Enter your ${RED}$COIN_NAME Masternode BLS Private Key${NC}. Leave it blank to generate a new ${RED}Masternode BLS Private Key${NC} for you:"
+  read -e BLSPRIVKEY
+  BLSPUBKEY="unknown (you have typed BLS private key, so should have BPS public key)"
+
+  if [[ -z "$COINKEY" ]] || [[ -z "$BLSPRIVKEY" ]]; then
+    echo "Starting coin daemon to generate key(s), please wait..."
     $COIN_PATH$COIN_DAEMON -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE -daemon
     sleep 30
     if [ -z "$(ps axo cmd:100 | grep $COIN_DAEMON)" ]; then
       echo -e "${RED}$COIN_NAME server could not start. Check /var/log/syslog for errors.{$NC}"
       exit 1
     fi
-    COINKEY=$($COIN_PATH$COIN_CLI -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE masternode genkey)
+
+    $COIN_PATH$COIN_CLI -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE masternode genkey &>/dev/null
     if [ "$?" -gt "0" ]; then
-      echo -e "${RED}Wallet not fully loaded. Let us wait and try again to generate the Private Key${NC}"
+      echo -e "${RED}Wallet not fully loaded. Let us wait a bit more and try once again...${NC}"
       sleep 30
-      COINKEY=$($COIN_PATH$COIN_CLI masternode genkey)
     fi
+
+    if [[ -z "$COINKEY" ]]; then
+      COINKEY=$($COIN_PATH$COIN_CLI -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE masternode genkey)
+    fi
+
+    if [[ -z "$BLSPRIVKEY" ]]; then
+      JSON=$($COIN_PATH$COIN_CLI -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE bls generate)
+      BLSPRIVKEY=$(echo $JSON | jq -r '.secret')
+      BLSPUBKEY=$(echo $JSON | jq -r '.public')
+    fi
+
     $COIN_PATH$COIN_CLI -datadir=$CONFIGFOLDER -conf=$CONFIGFOLDER/$CONFIG_FILE stop
   fi
 }
@@ -228,6 +244,7 @@ function update_config() {
   cat <<EOF >>$CONFIGFOLDER/$CONFIG_FILE
 masternode=1
 masternodeprivkey=$COINKEY
+masternodeblsprivkey=$BLSPRIVKEY
 externalip=$NODEIP:$COIN_PORT
 EOF
 }
@@ -376,7 +393,9 @@ function important_information() {
   echo -e "Stop:   ${RED}systemctl stop   $COIN_SERVICE.service${NC}"
   echo -e "Status: ${RED}systemctl status $COIN_SERVICE.service${NC}"
   echo -e "Masternode status: ${RED}$COIN_CLI masternode status${NC}"
-  echo -e "MASTERNODE PRIVATEKEY is: ${RED}$COINKEY${NC}"
+  echo -e "MASTERNODE PRIVATE KEY is:     ${RED}$COINKEY${NC}"
+  echo -e "MASTERNODE BLS PRIVATE KEY is: ${RED}$BLSPRIVKEY${NC}"
+  echo -e "MASTERNODE BLS PUBLIC KEY is:  ${RED}$BLSPUBKEY${NC}"
   if [[ -n $SENTINEL_REPO ]]; then
     echo -e "${RED}Sentinel${NC} is installed in ${RED}$CONFIGFOLDER/sentinel${NC}"
     echo -e "Sentinel logs is: ${RED}$CONFIGFOLDER/sentinel.log${NC}"
