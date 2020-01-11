@@ -1,3 +1,9 @@
+Argoneum Core staging tree 1.3.3.1
+==================================
+
+Fixed deterministic masternode collateral value.
+
+
 Argoneum Core staging tree 1.3.3.0
 ==================================
 
