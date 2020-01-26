@@ -117,9 +117,6 @@ namespace GUIUtil
     // Open argoneum.conf
     void openConfigfile();	
 
-    // Open masternode.conf
-    void openMNConfigfile();	
-
     // Browse backup folder
     void showBackups();
 

@@ -13,7 +13,7 @@
 #   BTC: 1D7nv1AitpNcTBKo2EHxBEN1oNVA7YgQ7H
 #   ETH: 0x1d64Fb3635c0b20d2f081E706aD52703652f0614
 #   LTC: LKh9V4nbD2pae87s5iFitYVp24qyJi5K8k
-#   AGM: MPF5C1g7T8nwayvoVmaC3Z4upAx5xf4skx
+#   AGM: MMazaSsYhhY6w6mZQPUjSJkKxtWS6kAWSZ
 #
 
 RUNAS="root"
@@ -34,7 +34,7 @@ COIN_CLI="${coin_name}-cli"
 TMP_FOLDER=$(mktemp -d)
 COIN_PATH='/usr/local/bin/'
 KERN_ARCH=$(getconf LONG_BIT)
-COIN_TGZ="https://github.com/argoneum/argoneum/releases/download/v1.3.3.1/argoneum-1.3.3-linux${KERN_ARCH}.tar.gz"
+COIN_TGZ="https://github.com/argoneum/argoneum/releases/download/v1.4.0.0/argoneum-1.4.0-linux${KERN_ARCH}.tar.gz"
 COIN_ZIP=$(echo $COIN_TGZ | awk -F'/' '{print $NF}')
 
 NODEIP=$(curl -s4 icanhazip.com)
@@ -242,9 +242,10 @@ function create_key() {
 
 function update_config() {
   cat <<EOF >>$CONFIGFOLDER/$CONFIG_FILE
-masternode=1
-masternodeprivkey=$COINKEY
+#masternode=1
+#masternodeprivkey=$COINKEY
 masternodeblsprivkey=$BLSPRIVKEY
+#masternodeblspubkey=$BLSPUBKEY
 externalip=$NODEIP:$COIN_PORT
 EOF
 }
@@ -393,7 +394,7 @@ function important_information() {
   echo -e "Stop:   ${RED}systemctl stop   $COIN_SERVICE.service${NC}"
   echo -e "Status: ${RED}systemctl status $COIN_SERVICE.service${NC}"
   echo -e "Masternode status: ${RED}$COIN_CLI masternode status${NC}"
-  echo -e "MASTERNODE PRIVATE KEY is:     ${RED}$COINKEY${NC}"
+  #echo -e "MASTERNODE PRIVATE KEY is:     ${RED}$COINKEY${NC}"
   echo -e "MASTERNODE BLS PRIVATE KEY is: ${RED}$BLSPRIVKEY${NC}"
   echo -e "MASTERNODE BLS PUBLIC KEY is:  ${RED}$BLSPUBKEY${NC}"
   if [[ -n $SENTINEL_REPO ]]; then
@@ -412,17 +413,17 @@ function important_information() {
   echo -e "This script is based on the work of zoldur, ${RED}https://github.com/zoldur/${NC}"
   echo -e "Used according to GNU GPL 3.0 terms and conditions."
   echo
-  echo -e "If you find it useful, please donate to the original author (${RED}zoldur${NC}):"
-  echo -e "  BTC: 3MNhbUq5smwMzxjU2UmTfeafPD7ag8kq76"
-  echo -e "  ETH: 0x26B9dDa0616FE0759273D651e77Fe7dd7751E01E"
-  echo -e "  LTC: LeZmPXHuQEhkd8iZY7a2zVAwF7DCWir2FF"
-  echo
   echo -e "If you like the script extensions (${GREEN}visible install, daemon log rotation, sentinel, the final screen${NC}),"
-  echo -e "you may also donate to os (${RED}osnwt${NC}):"
+  echo -e "you may donate to os (${RED}osnwt${NC}):"
   echo -e "  BTC: 1D7nv1AitpNcTBKo2EHxBEN1oNVA7YgQ7H"
   echo -e "  ETH: 0x1d64Fb3635c0b20d2f081E706aD52703652f0614"
   echo -e "  LTC: LKh9V4nbD2pae87s5iFitYVp24qyJi5K8k"
-  echo -e "  AGM: MPF5C1g7T8nwayvoVmaC3Z4upAx5xf4skx"
+  echo -e "  AGM: MMazaSsYhhY6w6mZQPUjSJkKxtWS6kAWSZ"
+  echo
+  echo -e "Or donate to original script author (${RED}zoldur${NC}):"
+  echo -e "  BTC: 3MNhbUq5smwMzxjU2UmTfeafPD7ag8kq76"
+  echo -e "  ETH: 0x26B9dDa0616FE0759273D651e77Fe7dd7751E01E"
+  echo -e "  LTC: LeZmPXHuQEhkd8iZY7a2zVAwF7DCWir2FF"
   echo -e "${GREEN}================================================================================================================================${NC}"
 }
 

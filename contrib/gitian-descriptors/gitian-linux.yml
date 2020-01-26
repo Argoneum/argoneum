@@ -1,5 +1,5 @@
 ---
-name: "argoneum-linux-1.3.3.1"
+name: "argoneum-linux-1.4.0.0"
 enable_cache: true
 suites:
 - "bionic"
@@ -37,7 +37,7 @@ files: []
 script: |
 
   WRAP_DIR=$HOME/wrapped
-  HOSTS="x86_64-linux-gnu i686-pc-linux-gnu"
+  HOSTS="x86_64-linux-gnu i686-pc-linux-gnu arm-linux-gnueabihf aarch64-linux-gnu"
   CONFIGFLAGS="--enable-glibc-back-compat --enable-reduce-exports --disable-bench --disable-gui-tests LDFLAGS=-static-libstdc++"
   CONFIGFLAGS+=" --disable-tests"
   FAKETIME_HOST_PROGS=""

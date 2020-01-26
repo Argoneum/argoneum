@@ -4,7 +4,7 @@ This issue tracker is only for technical issues related to Argoneum Core.
 
 General Argoneum questions and/or support requests and are best directed to the [Argoneumpay Reddit](https://www.reddit.com/r/argoneum/).
 
-To report critical security issues, email infosec@argoneum.org instead of creating Github issues.
+To report critical security issues, email infosec@argoneum.org and/or see the AGM bug bounty program on [Bugcrowd](https://bugcrowd.com/argoneumdigitalcash) instead of creating Github issues.
 
 ### Describe the issue
 

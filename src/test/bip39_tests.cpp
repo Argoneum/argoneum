@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The Argoneum Core developers
+// Copyright (c) 2014-2018 The Argoneum Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 

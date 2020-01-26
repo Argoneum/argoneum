@@ -1,5 +1,5 @@
 // Copyright (c) 2011-2015 The Bitcoin Core developers
-// Copyright (c) 2014-2017 The Argoneum Core developers
+// Copyright (c) 2014-2019 The Argoneum Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -161,7 +161,7 @@ your funds will already be anonymized. No additional waiting is required.</li> \
 This means those 1000 addresses last for about 100 mixing events. When 900 of them are used, your wallet must create more addresses. \
 It can only do this, however, if you have automatic backups enabled.<br> \
 Consequently, users who have backups disabled will also have PrivateSend disabled. <hr>\
-For more information, see the <a href=\"https://docs.argoneum.org/en/latest/wallets/argoneumcore/privatesend-instantsend.html\">PrivateSend documentation</a>."
+For more information, see the <a href=\"https://docs.argoneum.org/en/stable/wallets/argoneumcore/privatesend-instantsend.html\">PrivateSend documentation</a>."
         ));
         ui->aboutMessage->setWordWrap(true);
         ui->helpMessage->setVisible(false);

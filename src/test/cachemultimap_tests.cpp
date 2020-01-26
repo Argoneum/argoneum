@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2017 The Argoneum Core developers
+// Copyright (c) 2014-2018 The Argoneum Core developers
 
 #include "cachemultimap.h"
 

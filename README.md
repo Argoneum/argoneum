@@ -1,7 +1,10 @@
-Argoneum Core staging tree 1.3.3.1
+Argoneum Core staging tree 1.4.0.0
 ==================================
 
-Fixed deterministic masternode collateral value.
+Updated to Dash core v0.14.0.5.
+
+LLMQ and DKG are going to be activated in this version.
+DKG PoSe bans should be active in this release.
 
 
 Argoneum Core staging tree 1.3.3.0
