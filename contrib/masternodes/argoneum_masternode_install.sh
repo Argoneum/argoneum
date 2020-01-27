@@ -242,7 +242,7 @@ function create_key() {
 
 function update_config() {
   cat <<EOF >>$CONFIGFOLDER/$CONFIG_FILE
-#masternode=1
+masternode=1
 #masternodeprivkey=$COINKEY
 masternodeblsprivkey=$BLSPRIVKEY
 #masternodeblspubkey=$BLSPUBKEY
