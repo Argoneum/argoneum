@@ -95,14 +95,16 @@ function ask_yn() {
 }
 
 function ask_components() {
-  echo -e "You are going to install or upgrade ${GREEN}$COIN_NAME masternode${NC} and/or ${GREEN}Sentinel${NC}."
+  #echo -e "You are going to install or upgrade ${GREEN}$COIN_NAME masternode${NC} and/or ${GREEN}Sentinel${NC}."
+  echo -e "You are going to install or upgrade ${GREEN}$COIN_NAME masternode${NC}."
   echo -e "This script will also install the complete build environment, so you may compile/install any other coins later."
   echo -e ""
   ask_yn "Install masternode and build environment (type ${GREEN}Y${NC} or ${RED}N${NC}): "
   INSTALL_MASTERNODE=$?
 
-  ask_yn "Install Sentinel (type ${GREEN}Y${NC} or ${RED}N${NC}): "
-  INSTALL_SENTINEL=$?
+  #ask_yn "Install Sentinel (type ${GREEN}Y${NC} or ${RED}N${NC}): "
+  #INSTALL_SENTINEL=$?
+  INSTALL_SENTINEL=0
 }
 
 function prepare_system() {
@@ -397,18 +399,20 @@ function important_information() {
   #echo -e "MASTERNODE PRIVATE KEY is:     ${RED}$COINKEY${NC}"
   echo -e "MASTERNODE BLS PRIVATE KEY is: ${RED}$BLSPRIVKEY${NC}"
   echo -e "MASTERNODE BLS PUBLIC KEY is:  ${RED}$BLSPUBKEY${NC}"
-  if [[ -n $SENTINEL_REPO ]]; then
+  if [ "$INSTALL_SENTINEL" = "1" ]; then
     echo -e "${RED}Sentinel${NC} is installed in ${RED}$CONFIGFOLDER/sentinel${NC}"
     echo -e "Sentinel logs is: ${RED}$CONFIGFOLDER/sentinel.log${NC}"
   fi
   echo -e "${GREEN}================================================================================================================================${NC}"
-  echo -e "Send exactly 10000 coins to an own address using your cold wallet."
-  echo -e "After at least 1 confirmation enter the following command in your wallet debug console: ${RED}masternode outputs${NC}"
-  echo -e "You should have a masternode collateral transaction hash and index (usually 0 or 1)."
-  echo -e "Edit ${RED}masternode.conf${NC} file in your cold wallet data directory and add the following line:"
-  echo -e "${GREEN}mn1 $NODEIP:$COIN_PORT $COINKEY your-tx-hash your-tx-index${NC}"
-  echo -e "(on Windows you may use 'Tools -> Open Masternode Configurtion File' menu item to edit it)"
-  echo -e "Restart your wallet, wait for at least ${RED}${BLINK}15 confirmations${NC} of collateral tx and start your masternode."
+  echo -e "Argoneum currently uses DIP3 style masternodes. Please refer to Dash documentation for details."
+  echo -e "Useful links can be found at https://github.com/Argoneum/argoneum/releases (release 1.3.3.0)"
+  #echo -e "Send exactly 10000 coins to an own address using your cold wallet."
+  #echo -e "After at least 1 confirmation enter the following command in your wallet debug console: ${RED}masternode outputs${NC}"
+  #echo -e "You should have a masternode collateral transaction hash and index (usually 0 or 1)."
+  #echo -e "Edit ${RED}masternode.conf${NC} file in your cold wallet data directory and add the following line:"
+  #echo -e "${GREEN}mn1 $NODEIP:$COIN_PORT $COINKEY your-tx-hash your-tx-index${NC}"
+  #echo -e "(on Windows you may use 'Tools -> Open Masternode Configurtion File' menu item to edit it)"
+  #echo -e "Restart your wallet, wait for at least ${RED}${BLINK}15 confirmations${NC} of collateral tx and start your masternode."
   echo -e "${GREEN}================================================================================================================================${NC}"
   echo -e "This script is based on the work of zoldur, ${RED}https://github.com/zoldur/${NC}"
   echo -e "Used according to GNU GPL 3.0 terms and conditions."
