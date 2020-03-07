@@ -29,6 +29,52 @@ int GetOffsetFromUtc()
 #endif
 }
 
+// Helper classes to sort masternode list by IP and numbers properly
+
+class QTableIntItem : public QTableWidgetItem
+{
+private:
+    int intValue;
+
+public:
+    QTableIntItem(const int n)
+        : QTableWidgetItem(QString::number(n))
+        , intValue(n)
+    {
+    }
+
+    QTableIntItem(const int n, QString const & text)
+        : QTableWidgetItem(text)
+        , intValue(n)
+    {
+    }
+
+    bool operator < (QTableWidgetItem const & rhs) const
+    {
+        QTableIntItem const * r(dynamic_cast<QTableIntItem const *>(&rhs));
+        return (r == nullptr) ? false : intValue < r->intValue;
+    }
+};
+
+class QTableServiceItem : public QTableWidgetItem
+{
+private:
+    CService service;
+
+public:
+    QTableServiceItem(const CService addr)
+        : QTableWidgetItem(QString::fromStdString(addr.ToString()))
+        , service(addr)
+    {
+    }
+
+    bool operator < (QTableWidgetItem const & rhs) const
+    {
+        QTableServiceItem const * r(dynamic_cast<QTableServiceItem const *>(&rhs));
+        return (r == nullptr) ? false : service < r->service;
+    }
+};
+
 MasternodeList::MasternodeList(const PlatformStyle* platformStyle, QWidget* parent) :
     QWidget(parent),
     ui(new Ui::MasternodeList),
@@ -184,13 +230,14 @@ void MasternodeList::updateDIP3List()
             if (!fMyMasternode) return;
         }
         // populate list
-        // Address, Protocol, Status, Active Seconds, Last Seen, Pub Key
-        QTableWidgetItem* addressItem = new QTableWidgetItem(QString::fromStdString(dmn->pdmnState->addr.ToString()));
+        QTableServiceItem* addressItem = new QTableServiceItem(dmn->pdmnState->addr);
         QTableWidgetItem* statusItem = new QTableWidgetItem(mnList.IsMNValid(dmn) ? tr("ENABLED") : (mnList.IsMNPoSeBanned(dmn) ? tr("POSE_BANNED") : tr("UNKNOWN")));
-        QTableWidgetItem* PoSeScoreItem = new QTableWidgetItem(QString::number(dmn->pdmnState->nPoSePenalty));
-        QTableWidgetItem* registeredItem = new QTableWidgetItem(QString::number(dmn->pdmnState->nRegisteredHeight));
-        QTableWidgetItem* lastPaidItem = new QTableWidgetItem(QString::number(dmn->pdmnState->nLastPaidHeight));
-        QTableWidgetItem* nextPaymentItem = new QTableWidgetItem(nextPayments.count(dmn->proTxHash) ? QString::number(nextPayments[dmn->proTxHash]) : tr("UNKNOWN"));
+        QTableIntItem* PoSeScoreItem = new QTableIntItem(dmn->pdmnState->nPoSePenalty);
+        QTableIntItem* registeredItem = new QTableIntItem(dmn->pdmnState->nRegisteredHeight);
+        QTableIntItem* lastPaidItem = new QTableIntItem(dmn->pdmnState->nLastPaidHeight);
+        QTableIntItem* nextPaymentItem = new QTableIntItem(
+                nextPayments.count(dmn->proTxHash) ? nextPayments[dmn->proTxHash] : -1,
+                nextPayments.count(dmn->proTxHash) ? QString::number(nextPayments[dmn->proTxHash]) : tr("UNKNOWN"));
 
         CTxDestination payeeDest;
         QString payeeStr;
