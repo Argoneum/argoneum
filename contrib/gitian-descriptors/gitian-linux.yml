@@ -1,5 +1,5 @@
 ---
-name: "argoneum-linux-1.4.0.0"
+name: "argoneum-linux-1.4.1.0"
 enable_cache: true
 suites:
 - "bionic"
@@ -220,8 +220,3 @@ script: |
     rm -rf ccache
     popd
   fi
-
-  #mv ${OUTDIR}/${DISTNAME}-x86_64-*-debug.tar.gz ${OUTDIR}/${DISTNAME}-linux64-debug.tar.gz
-  #mv ${OUTDIR}/${DISTNAME}-i686-*-debug.tar.gz ${OUTDIR}/${DISTNAME}-linux32-debug.tar.gz
-  mv ${OUTDIR}/${DISTNAME}-x86_64-*.tar.gz ${OUTDIR}/${DISTNAME}-linux64.tar.gz
-  mv ${OUTDIR}/${DISTNAME}-i686-*.tar.gz ${OUTDIR}/${DISTNAME}-linux32.tar.gz
